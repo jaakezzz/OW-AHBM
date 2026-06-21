@@ -671,7 +671,7 @@ settings
 				Damage Received: 48%
 				Healing Dealt: 500%
 				Healing Received: 21%
-				Health: 266%
+				Health: 219%
 				Movement Speed: 90%
 				Passive Health Regeneration: On
 				Role Passives: Off
