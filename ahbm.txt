@@ -20552,7 +20552,7 @@ rule("CORE: (TEAM) ANRAN - IGNITION ACTIVE")
 	{
 		Skip If(Event Player.timer != 0, 13);
 		Event Player.Ability_Bool = True;
-		Global.BossDamageReceived *= 1.100;
+		Global.BossDamageReceived *= 1.160;
 		Set Damage Received(Victim, Global.BossDamageReceived);
 		Event Player.timer = 3;
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
@@ -20631,7 +20631,7 @@ rule("SUB: BOSS IGNITION EXPIRE")
 
 	actions
 	{
-		Global.BossDamageReceived *= 10 / 11;
+		Global.BossDamageReceived *= 10 / 11.6;
 		Set Damage Received(All Players(Team 1), Global.BossDamageReceived);
 		Destroy HUD Text(Global.BossStatus_Burning);
 	}
@@ -20656,7 +20656,7 @@ rule("CORE: (BOSS) ALL / (TEAM) ANRAN - DAMAGE AMPLIFIED")
 
 	actions
 	{
-		Global.BossIgnitedDamageTaken += Event Damage / 11;
+		Global.BossIgnitedDamageTaken += Event Damage / 7.25;
 	}
 }
 
