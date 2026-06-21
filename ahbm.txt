@@ -378,7 +378,7 @@ settings
 				Damage Received: 22%
 				Frenetic Flight Maximum Time: 75%
 				Frenetic Flight Recharge Rate: 30%
-				Healing Dealt: 500%
+				Healing Dealt: 400%
 				Healing Received: 10%
 				Health: 400%
 				Lifeline: Off
@@ -592,7 +592,7 @@ settings
 			Moira
 			{
 				Biotic Orb Cooldown Time: 312%
-				Biotic Orb Max Damage Scalar: 500%
+				Biotic Orb Max Damage Scalar: 400%
 				Biotic Orb Max Healing Scalar: 500%
 				Damage Dealt: 222%
 				Damage Received: 50%
@@ -671,7 +671,7 @@ settings
 				Damage Received: 48%
 				Healing Dealt: 500%
 				Healing Received: 21%
-				Health: 200%
+				Health: 266%
 				Movement Speed: 90%
 				Passive Health Regeneration: On
 				Role Passives: Off
@@ -1309,7 +1309,7 @@ settings
 			Jetpack Cat
 			{
 				Biotic Pawjectile Range: 500%
-				Damage Dealt: 75%
+				Damage Dealt: 67%
 				Healing Dealt: 10%
 				Healing Received: 140%
 				Lifeline Cooldown Time: 400%
@@ -1495,7 +1495,7 @@ settings
 			{
 				Biotic Energy Recharge Rate: 30%
 				Biotic Orb Cooldown Time: 188%
-				Biotic Orb Max Damage Scalar: 50%
+				Biotic Orb Max Damage Scalar: 40%
 				Damage Dealt: 60%
 				Fade Cooldown Time: 150%
 				Healing Dealt: 44%
@@ -6010,6 +6010,26 @@ rule("CORE: (BOSS) WRECKING BALL: HEALTH")
 	}
 }
 
+rule("CORE: (BOSS) REAPER: HEALTH")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		Reaper;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Set Max Health(Event Player, 99.626);
+	}
+}
+
 rule("CORE: (BOSS) HOG - FLAME ON")
 {
 	event
@@ -6579,7 +6599,7 @@ rule("CORE: (BOSS) General: SWITCH HEALTH")
 	conditions
 	{
 		Array Contains(Array(Hero(Orisa), Hero(D.Va), Hero(Kiriko), Hero(Wrecking Ball), Hero(Mercy), Hero(Tracer), Hero(Mercy), Hero(
-			Widowmaker), Hero(Sombra), Hero(Moira), Hero(Winston), Hero(Echo), Hero(Roadhog), Hero(Lúcio), Hero(Shion), Hero(Sierra)), Hero Of(Event Player)) != True;
+			Widowmaker), Hero(Sombra), Hero(Moira), Hero(Winston), Hero(Echo), Hero(Roadhog), Hero(Lúcio), Hero(Reaper)), Hero Of(Event Player)) != True;
 		Has Spawned(Event Player) == True;
 	}
 
