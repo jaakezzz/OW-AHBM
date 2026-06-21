@@ -283,7 +283,7 @@ settings
 				Siphon Blaster Duration Scalar: 500%
 				Siphon Blaster Heat Scalar: 20%
 				Ultimate Duration: 90%
-				Ultimate Generation - Combat Override Protocol: 250%
+				Ultimate Generation - Combat Override Protocol: 275%
 				Ultimate Generation - Passive Override Protocol: 0%
 			}
 
@@ -347,7 +347,7 @@ settings
 				Movement Speed: 90%
 				Passive Health Regeneration: On
 				Role Passives: On
-				Spike Guard Resource Cost: 125%
+				Spike Guard Resource Cost: 100%
 				Spike Guard Resource Regeneration: 90%
 				Violent Leap Cooldown Time: 50%
 			}
@@ -486,6 +486,7 @@ settings
 				Rejuvenating Dash Healing: 500%
 				Role Passives: Off
 				Tree of Life Health: 50%
+				Ultimate Generation - Combat Tree of Life: 109%
 				Ultimate Generation - Passive Tree of Life: 0%
 				Ultimate Generation Tree of Life: 500%
 				Weapons Enabled: Thorn Volley Only
@@ -564,7 +565,7 @@ settings
 				Sympathetic Recovery: Off
 				Ultimate Generation - Combat Valkyrie: 133%
 				Ultimate Generation - Passive Valkyrie: 3%
-				Ultimate Generation Valkyrie: 33%
+				Ultimate Generation Valkyrie: 35%
 				Weapons Enabled: Caduceus Blaster Only
 			}
 
@@ -578,8 +579,8 @@ settings
 				Healing Kasa: Off
 				Healing Received: 10%
 				Health: 250%
-				Katashiro Return Cooldown Time: 83%
-				Katashiro Return Duration Scalar: 178%
+				Katashiro Return Cooldown Time: 90%
+				Katashiro Return Duration Scalar: 145%
 				Movement Speed: 115%
 				Passive Health Regeneration: On
 				Role Passives: Off
@@ -720,6 +721,27 @@ settings
 				Ultimate Generation - Passive Whole Hog: 0%
 				Ultimate Generation Whole Hog: 172%
 				Whole Hog Knockback Scalar: 83%
+			}
+
+			Shion
+			{
+				Ammunition Clip Size Scalar: 50%
+				Damage Dealt: 143%
+				Damage Received: 36%
+				Execution Cooldown Time: 80%
+				Healing Received: 20%
+				Health: 33%
+				Joyride Cooldown Time: 66%
+				Joyride Duration Scalar: 125%
+				Joyride Knockback Scalar: 200%
+				Joyride Speed Scalar: 75%
+				Jump Vertical Speed: 125%
+				Movement Speed: 150%
+				Passive Health Regeneration: On
+				Role Passives: Off
+				Ultimate Duration: 50%
+				Ultimate Generation - Combat Satsuriku Spree: 200%
+				Ultimate Generation - Passive Satsuriku Spree: 0%
 			}
 
 			Sierra
@@ -866,6 +888,7 @@ settings
 				Projectile Speed: 100%
 				Role Passives: Off
 				Soaring Slice Cooldown Time: 142%
+				Ultimate Generation Sundering Blade: 115%
 				Whirlwind Dash Cooldown Time: 30%
 			}
 
@@ -1201,7 +1224,7 @@ settings
 				Siphon Blaster Cooldown Time: 90%
 				Siphon Blaster Duration Scalar: 100%
 				Siphon Blaster Heat Scalar: 80%
-				Ultimate Generation - Combat Override Protocol: 250%
+				Ultimate Generation - Combat Override Protocol: 275%
 				Ultimate Generation - Passive Override Protocol: 175%
 			}
 
@@ -1224,7 +1247,7 @@ settings
 			{
 				Ammunition Clip Size Scalar: 100%
 				Damage Dealt: 90%
-				Deflect Cooldown Time: 300%
+				Deflect Cooldown Time: 375%
 				Passive Health Regeneration: On
 				Projectile Speed: 100%
 				Role Passives: Off
@@ -1375,7 +1398,7 @@ settings
 				Tree of Life Health: 75%
 				Ultimate Generation - Combat Tree of Life: 150%
 				Ultimate Generation - Passive Tree of Life: 40%
-				Ultimate Generation Tree of Life: 132%
+				Ultimate Generation Tree of Life: 144%
 			}
 
 			Lúcio
@@ -1448,7 +1471,7 @@ settings
 				Sympathetic Recovery: On
 				Ultimate Generation - Combat Valkyrie: 200%
 				Ultimate Generation - Passive Valkyrie: 20%
-				Ultimate Generation Valkyrie: 150%
+				Ultimate Generation Valkyrie: 160%
 			}
 
 			Mizuki
@@ -1459,8 +1482,8 @@ settings
 				Healing Dealt: 50%
 				Healing Kasa Cooldown Time: 500%
 				Healing Received: 75%
-				Katashiro Return Cooldown Time: 75%
-				Katashiro Return Duration Scalar: 266%
+				Katashiro Return Cooldown Time: 81%
+				Katashiro Return Duration Scalar: 218%
 				Passive Health Regeneration: Off
 				Role Passives: On
 				Ultimate Generation - Combat Kekkai Sanctuary: 115%
@@ -1585,6 +1608,20 @@ settings
 				Ultimate Generation - Passive Whole Hog: 6%
 				Ultimate Generation Whole Hog: 100%
 				Whole Hog Knockback Scalar: 40%
+			}
+
+			Shion
+			{
+				Ammunition Clip Size Scalar: 66%
+				Damage Dealt: 85%
+				Evade Distance Scalar: 150%
+				Execution Cooldown Time: 200%
+				Healing Received: 80%
+				Joyride Cooldown Time: 106%
+				Joyride Knockback Scalar: 0%
+				Passive Health Regeneration: On
+				Role Passives: Off
+				Ultimate Generation - Combat Satsuriku Spree: 200%
 			}
 
 			Sierra
@@ -1721,7 +1758,7 @@ settings
 				Soaring Slice Cooldown Time: 171%
 				Ultimate Generation - Combat Sundering Blade: 0%
 				Ultimate Generation - Passive Sundering Blade: 500%
-				Ultimate Generation Sundering Blade: 213%
+				Ultimate Generation Sundering Blade: 245%
 				Warding Stance Regen Scalar: 135%
 				Whirlwind Dash Cooldown Time: 160%
 			}
@@ -6542,7 +6579,7 @@ rule("CORE: (BOSS) General: SWITCH HEALTH")
 	conditions
 	{
 		Array Contains(Array(Hero(Orisa), Hero(D.Va), Hero(Kiriko), Hero(Wrecking Ball), Hero(Mercy), Hero(Tracer), Hero(Mercy), Hero(
-			Widowmaker), Hero(Sombra), Hero(Moira), Hero(Winston), Hero(Echo), Hero(Roadhog), Hero(Lúcio)), Hero Of(Event Player)) != True;
+			Widowmaker), Hero(Sombra), Hero(Moira), Hero(Winston), Hero(Echo), Hero(Roadhog), Hero(Lúcio), Hero(Shion), Hero(Sierra)), Hero Of(Event Player)) != True;
 		Has Spawned(Event Player) == True;
 	}
 
@@ -6903,10 +6940,10 @@ rule("CORE: INITIALIZE ROLES (GLOBAL A)")
 			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array,
 			Hero(Doomfist)), Hero(Junkrat)), Hero(Junker Queen)), Hero(Cassidy)), Hero(Mei)), Hero(Emre)), Hero(Orisa)), Hero(Roadhog)),
 			Hero(Symmetra)), Hero(Wrecking Ball)), Hero(Mauga)), Hero(Hazard)), Hero(Vendetta)), Hero(Venture));
-		Global.A[3] = Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+		Global.A[3] = Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
 			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, Hero(Echo)), Hero(Widowmaker)),
 			Hero(Tracer)), Hero(Sojourn)), Hero(Ashe)), Hero(Bastion)), Hero(Reaper)), Hero(Hanzo)), Hero(Genji)), Hero(Freja)), Hero(
-			Torbjörn)), Hero(Sierra));
+			Torbjörn)), Hero(Sierra)), Hero(Shion));
 		Global.A[4] = Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
 			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
 			Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, Hero(Jetpack Cat)), Hero(Mizuki)), Hero(Zarya)),
@@ -11260,6 +11297,32 @@ rule("CORE: (BOSS) JUNO: HEALTH POOL")
 	}
 }
 
+rule("CORE: (BOSS) SHION: HEALTH POOL")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		Shion;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Remove Health Pool From Player(Global.BOSS_HealthPools[0]);
+		Remove Health Pool From Player(Global.BOSS_HealthPools[1]);
+		Add Health Pool To Player(Event Player, Health, 517.500, True, False);
+		Global.BOSS_HealthPools[0] = Last Created Health Pool;
+		Event Player.base_health = Max Health(Event Player);
+		Event Player.base_shields = Max Health Of Type(Event Player, Shields);
+		Set Healing Dealt(Event Player, 100);
+	}
+}
+
 rule("CORE: (BOSS) SIGMA: HEALTH & SIZE")
 {
 	event
@@ -11354,7 +11417,7 @@ rule("CORE: (BOSS) General: REMOVE POOLS")
 
 	conditions
 	{
-		Array Contains(Array(Hero(Genji), Hero(Hanzo), Hero(Widowmaker), Hero(Juno), Hero(Ashe), Hero(Domina), Hero(Echo), Hero(Sigma),
+		Array Contains(Array(Hero(Genji), Hero(Hanzo), Hero(Widowmaker), Hero(Juno), Hero(Ashe), Hero(Domina), Hero(Echo), Hero(Shion), Hero(Sigma),
 			Hero(Winston)), Hero Of(Event Player)) != True;
 		Has Spawned(Event Player) == True;
 	}
@@ -19253,26 +19316,6 @@ rule("CORE: (BOSS) JQ DMG")
 	actions
 	{
 		Damage(Victim, Event Player, 30);
-	}
-}
-
-rule("CORE: (BOSS) REIN DMG FS")
-{
-	event
-	{
-		Player Dealt Damage;
-		Team 1;
-		Reinhardt;
-	}
-
-	conditions
-	{
-		Event Ability == Button(Ability 2);
-	}
-
-	actions
-	{
-		Damage(Victim, Event Player, 5);
 	}
 }
 
