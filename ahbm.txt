@@ -5242,7 +5242,7 @@ rule("CORE: (BOSS) MOIRA - HEAL EFFECT")
 		Wait(0.016, Abort When False);
 		Skip If(Event Player.F == 1, 1);
 		Destroy Effect(Event Player.PlayerFX_3);
-		Create Effect(All Players(All Teams), Orb, Color(Yellow), Event Player + Vector(0, 1, 0) + Facing Direction Of(Event Player),
+		Create Effect(All Players(All Teams), Orb, Color(Yellow), Event Player + Up + Facing Direction Of(Event Player),
 			0.250, Visible To Position and Radius);
 		Event Player.PlayerFX_3 = Last Created Entity;
 		disabled Wait(1.111, Abort When False);
@@ -19624,12 +19624,12 @@ rule("CORE: (BOSS) RAM JUMP")
 		Wait(0.200, Ignore Condition);
 		Chase Player Variable At Rate(Event Player, secondary_charge, 0, 1, Destination and Rate);
 		Wait Until((Is On Ground(Event Player) == True || Is Dead(Event Player) == True) == True, 999);
-		Play Effect(All Players(All Teams), Doomfist Meteor Strike Impact Sound, Color(White), Position Of(Event Player) + Vector(0, 1, 0),
+		Wait Until(Is On Ground(Event Player) || Is Dead(Event Player), 999);
 			500);
 		Wait(0.016, Ignore Condition);
 		Play Effect(All Players(All Teams), Ring Explosion, Color(White), Position Of(Event Player) + Vector(0, 0.200, 0), 25);
 		Wait(0.016, Ignore Condition);
-		Play Effect(All Players(All Teams), Bad Explosion, Color(Rose), Position Of(Event Player) + Vector(0, 1, 0), 8);
+		Play Effect(All Players(All Teams), Bad Explosion, Color(Rose), Position Of(Event Player) + Up, 8);
 		Apply Impulse(Players Within Radius(Event Player, 13, Team 2, Surfaces And Enemy Barriers), Up, 6.666, To World,
 			Cancel Contrary Motion);
 		Set Status(Players Within Radius(Event Player, 13, Team 2, Surfaces And Enemy Barriers), Event Player, Rooted, 0.666);
