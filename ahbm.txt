@@ -2050,17 +2050,13 @@ rule("CORE: (BOSS) ALL - RESISTANCE STAT")
 			Global.BossResistanceStat = 0.350;
 		Else If(Hero Of(Event Player) == Hero(Venture) || Hero Of(Event Player) == Hero(Winston));
 			Global.BossResistanceStat = 0.550;
-		Else If(Hero Of(Event Player) == Hero(Reaper) || Hero Of(Event Player) == Hero(Sojourn) || Hero Of(Event Player) == Hero(
-				Wrecking Ball));
+		Else If(Array Contains(Array(Hero(Reaper), Hero(Sojourn), Hero(Wrecking Ball)), Hero Of(Event Player)));
 			Global.BossResistanceStat = 0.480;
-		Else If(Hero Of(Event Player) == Hero(Reinhardt) || Hero Of(Event Player) == Hero(Ramattra) || Hero Of(Event Player) == Hero(
-				Domina));
+		Else If(Array Contains(Array(Hero(Reinhardt), Hero(Ramattra), Hero(Domina)), Hero Of(Event Player)));
 			Global.BossResistanceStat = 0.200;
-		Else If(Hero Of(Event Player) == Hero(Brigitte) || Hero Of(Event Player) == Hero(Lifeweaver) || Hero Of(Event Player) == Hero(
-				Pharah) || Hero Of(Event Player) == Hero(Sigma));
+		Else If(Array Contains(Array(Hero(Brigitte), Hero(Lifeweaver), Hero(Pharah), Hero(Sigma)), Hero Of(Event Player)));
 			Global.BossResistanceStat = 0.200;
-		Else If(Hero Of(Event Player) == Hero(D.Va) || Hero Of(Event Player) == Hero(Junker Queen) || Hero Of(Event Player) == Hero(Moira)
-				|| Hero Of(Event Player) == Hero(Orisa) || Hero Of(Event Player) == Hero(Widowmaker));
+		Else If(Array Contains(Array(Hero(D.Va), Hero(Junker Queen), Hero(Moira), Hero(Orisa), Hero(Widowmaker)), Hero Of(Event Player)));
 			Global.BossResistanceStat = 0.500;
 		Else;
 			Global.BossResistanceStat = 0.400;
@@ -2864,16 +2860,9 @@ rule("CORE: (MSGS) BOSS ABILITIES ERASE")
 
 	conditions
 	{
-		(Is Hero Being Played(Hero(Reaper), Team 1) == False && Is Hero Being Played(Hero(Symmetra), Team 1)
-			== False && Is Hero Being Played(Hero(Mercy), Team 1) == False && Is Hero Being Played(Hero(Soldier: 76), Team 1)
-			== False && Is Hero Being Played(Hero(Tracer), Team 1) == False && Is Hero Being Played(Hero(Sombra), Team 1)
-			== False && Is Hero Being Played(Hero(Moira), Team 1) == False && Is Hero Being Played(Hero(Cassidy), Team 1)
-			== False && Is Hero Being Played(Hero(Lúcio), Team 1) == False && Is Hero Being Played(Hero(Reinhardt), Team 1)
-			== False && Is Hero Being Played(Hero(Kiriko), Team 1) == False && Is Hero Being Played(Hero(Ramattra), Team 1)
-			== False && Is Hero Being Played(Hero(Genji), Team 1) == False && Is Hero Being Played(Hero(Junkrat), Team 1)
-			== False && Is Hero Being Played(Hero(Brigitte), Team 1) == False && Is Hero Being Played(Hero(Wrecking Ball), Team 1)
-			== False && Is Hero Being Played(Hero(Hanzo), Team 1) == False && Is Hero Being Played(Hero(Ashe), Team 1) == False) == True;
-		Is Hero Being Played(Hero(Echo), Team 1) == False;
+		Array Contains(Array(Hero(Reaper), Hero(Symmetra), Hero(Mercy), Hero(Soldier: 76), Hero(Tracer), Hero(Sombra), Hero(Moira), Hero(
+			Cassidy), Hero(Lúcio), Hero(Reinhardt), Hero(Kiriko), Hero(Ramattra), Hero(Genji), Hero(Junkrat), Hero(Brigitte), Hero(
+			Wrecking Ball), Hero(Hanzo), Hero(Ashe), Hero(Echo)), Hero Of(First Of(All Players(Team 1)))) == False;
 		Has Spawned(Event Player) == True;
 	}
 
@@ -3353,8 +3342,12 @@ rule("CORE: (TEAM) ALL - GENERAL SWITCH")
 				Set Max Health(Event Player, 99.379);
 			Else If((Hero Of(Event Player) == Hero(Mercy) || Hero Of(Event Player) == Hero(Domina)) == True);
 				Set Max Health(Event Player, 98.765);
+<<<<<<< HEAD
 			Else If((Hero Of(Event Player) == Hero(Moira) || Hero Of(Event Player) == Hero(Freja) || Hero Of(Event Player) == Hero(Sojourn))
 					== True);
+=======
+			Else If(Array Contains(Array(Hero(Moira), Hero(Freja), Hero(Sojourn)), Hero Of(Event Player)));
+>>>>>>> eb9cde4 (Array Refactor)
 				Set Max Health(Event Player, 99.206);
 			Else If(Hero Of(Event Player) == Hero(Tracer));
 				Set Max Health(Event Player, 99.861);
@@ -3972,8 +3965,7 @@ rule("CORE: (BOSS) GENJI - SWITCH")
 		Event Player.S = Null;
 		Skip If(Event Player.D == True && Event Player == Players On Hero(Hero(Genji), Team 1), 1);
 		Event Player.D = 0;
-		disabled Skip If(Event Player == Players On Hero(Hero(Mercy), Team 1) || Event Player == Players On Hero(Hero(Symmetra), Team 1)
-			|| Event Player == Players On Hero(Hero(Zenyatta), Team 1) || Event Player == Players On Hero(Hero(Torbjörn), Team 1), 1);
+		disabled Skip If(Array Contains(Array(Hero(Mercy), Hero(Symmetra), Hero(Zenyatta), Hero(Torbjörn)), Hero Of(Event Player)), 1);
 		disabled Set Ability 1 Enabled(Event Player, True);
 	}
 }
@@ -5832,7 +5824,7 @@ rule("CORE: (BOSS) ALL HEAL DEALT")
 
 	conditions
 	{
-		(Hero Of(Event Player) != Hero(Zenyatta) && Hero Of(Event Player) != Hero(Illari) && Hero Of(Event Player) != Hero(Juno)) == True;
+		Array Contains(Array(Hero(Zenyatta), Hero(Illari), Hero(Juno)), Hero Of(Event Player)) == False;
 		Has Spawned(Event Player) == True;
 	}
 
@@ -5876,9 +5868,8 @@ rule("CORE: (BOSS) JUNO TANK DMG")
 	conditions
 	{
 		Event Ability == Button(Secondary Fire);
-		(Array Contains(Remove From Array(Remove From Array(All Tank Heroes, Hero(Doomfist)), Hero(Hazard)), Hero Of(Victim)) || Hero Of(
-			Victim) == Hero(Brigitte) || Hero Of(Victim) == Hero(Torbjörn) || Hero Of(Victim) == Hero(Bastion) || Hero Of(Victim) == Hero(
-			Mercy)) == True;
+		Array Contains(Append To Array(Remove From Array(All Tank Heroes, Array(Hero(Doomfist), Hero(Hazard))), Array(Hero(Brigitte), Hero(
+			Torbjörn), Hero(Bastion), Hero(Mercy))), Hero Of(Victim)) == True;
 	}
 
 	actions
@@ -5938,8 +5929,7 @@ rule("CORE: (BOSS) Mobile Healer: HEALTH")
 
 	conditions
 	{
-		(Hero Of(Event Player) == Hero(Mercy) || Hero Of(Event Player) == Hero(Kiriko) || Hero Of(Event Player) == Hero(Moira) || Hero Of(
-			Event Player) == Hero(Lúcio)) == True;
+		Array Contains(Array(Hero(Mercy), Hero(Kiriko), Hero(Moira), Hero(Lúcio)), Hero Of(Event Player)) == True;
 		Has Spawned(Event Player) == True;
 	}
 
@@ -6954,21 +6944,14 @@ rule("CORE: INITIALIZE ROLES (GLOBAL A)")
 
 	actions
 	{
-		Global.A[1] = Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, Hero(
-			Brigitte)), Hero(Domina)), Hero(Reinhardt)), Hero(Sigma)), Hero(Winston)), Hero(Ramattra));
-		Global.A[2] = Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
-			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array,
-			Hero(Doomfist)), Hero(Junkrat)), Hero(Junker Queen)), Hero(Cassidy)), Hero(Mei)), Hero(Emre)), Hero(Orisa)), Hero(Roadhog)),
-			Hero(Symmetra)), Hero(Wrecking Ball)), Hero(Mauga)), Hero(Hazard)), Hero(Vendetta)), Hero(Venture));
-		Global.A[3] = Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
-			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, Hero(Echo)), Hero(Widowmaker)),
-			Hero(Tracer)), Hero(Sojourn)), Hero(Ashe)), Hero(Bastion)), Hero(Reaper)), Hero(Hanzo)), Hero(Genji)), Hero(Freja)), Hero(
-			Torbjörn)), Hero(Sierra)), Hero(Shion));
-		Global.A[4] = Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
-			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
-			Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, Hero(Jetpack Cat)), Hero(Mizuki)), Hero(Zarya)),
-			Hero(Ana)), Hero(Baptiste)), Hero(D.Va)), Hero(Illari)), Hero(Juno)), Hero(Kiriko)), Hero(Lifeweaver)), Hero(Lúcio)), Hero(
-			Anran)), Hero(Soldier: 76)), Hero(Moira)), Hero(Pharah)), Hero(Sombra)), Hero(Wuyang)), Hero(Zenyatta));
+		Global.A[1] = Array(Hero(Brigitte), Hero(Domina), Hero(Reinhardt), Hero(Sigma), Hero(Winston), Hero(Ramattra));
+		Global.A[2] = Array(Hero(Doomfist), Hero(Junkrat), Hero(Junker Queen), Hero(Cassidy), Hero(Mei), Hero(Emre), Hero(Orisa), Hero(
+			Roadhog), Hero(Symmetra), Hero(Wrecking Ball), Hero(Mauga), Hero(Hazard), Hero(Vendetta), Hero(Venture));
+		Global.A[3] = Array(Hero(Echo), Hero(Widowmaker), Hero(Tracer), Hero(Sojourn), Hero(Ashe), Hero(Bastion), Hero(Reaper), Hero(
+			Hanzo), Hero(Genji), Hero(Freja), Hero(Torbjörn), Hero(Sierra), Hero(Shion));
+		Global.A[4] = Array(Hero(Jetpack Cat), Hero(Mizuki), Hero(Zarya), Hero(Ana), Hero(Baptiste), Hero(D.Va), Hero(Illari), Hero(Juno),
+			Hero(Kiriko), Hero(Lifeweaver), Hero(Lúcio), Hero(Anran), Hero(Soldier: 76), Hero(Moira), Hero(Pharah), Hero(Sombra), Hero(
+			Wuyang), Hero(Zenyatta));
 	}
 }
 
@@ -6983,7 +6966,7 @@ rule("ROLES: set player DEF")
 
 	conditions
 	{
-		Is True For Any(Global.A[1], Current Array Element == Hero Of(Event Player)) == True;
+		Array Contains(Global.A[1], Hero Of(Event Player)) == True;
 		Is Waiting For Players == False;
 	}
 
@@ -7004,7 +6987,7 @@ rule("ROLES: set player ENF")
 
 	conditions
 	{
-		Is True For Any(Global.A[2], Current Array Element == Hero Of(Event Player)) == True;
+		Array Contains(Global.A[2], Hero Of(Event Player)) == True;
 		Is Waiting For Players == False;
 	}
 
@@ -7025,7 +7008,7 @@ rule("ROLES: set player OFF")
 
 	conditions
 	{
-		Is True For Any(Global.A[3], Current Array Element == Hero Of(Event Player)) == True;
+		Array Contains(Global.A[3], Hero Of(Event Player)) == True;
 		Is Waiting For Players == False;
 	}
 
@@ -7046,7 +7029,7 @@ rule("ROLES: set player TAC")
 
 	conditions
 	{
-		Is True For Any(Global.A[4], Current Array Element == Hero Of(Event Player)) == True;
+		Array Contains(Global.A[4], Hero Of(Event Player)) == True;
 		Is Waiting For Players == False;
 	}
 
@@ -9967,7 +9950,7 @@ rule("CORE: (TEAM) ALL - RE-ENABLE SECONDARY")
 	conditions
 	{
 		Has Spawned(Event Player) == True;
-		(Hero Of(Event Player) != Hero(D.Va) && Hero Of(Event Player) != Hero(Sombra) && Hero Of(Event Player) != Hero(Reaper)) == True;
+		Array Contains(Array(Hero(D.Va), Hero(Sombra), Hero(Reaper)), Hero Of(Event Player)) != True;
 	}
 
 	actions
@@ -10902,8 +10885,7 @@ rule("CORE: (BOSS) DISABLE 2nd FIRE")
 
 	conditions
 	{
-		(Hero Of(Event Player) == Hero(Baptiste) || Hero Of(Event Player) == Hero(Zenyatta) || Hero Of(Event Player) == Hero(Illari)
-			|| Hero Of(Event Player) == Hero(Winston) || Hero Of(Event Player) == Hero(Reaper)) == True;
+		Array Contains(Array(Hero(Baptiste), Hero(Zenyatta), Hero(Illari), Hero(Winston), Hero(Reaper)), Hero Of(Event Player)) == True;
 		Has Spawned(Event Player) == True;
 	}
 
@@ -11156,12 +11138,10 @@ rule("CORE: (BOSS) ALL - ABILITY 2 SET")
 
 	actions
 	{
-		Skip If(Hero Of(Event Player) == Hero(Mercy) || Hero Of(Event Player) == Hero(Zarya) || Hero Of(Event Player) == Hero(Lifeweaver),
-			2);
+		Skip If(Array Contains(Array(Hero(Mercy), Hero(Zenyatta), Hero(Sombra), Hero(Symmetra), Hero(Ramattra)), Hero Of(Event Player)), 2);
 		Set Ability 2 Enabled(Event Player, True);
 		Allow Button(Event Player, Button(Ability 2));
-		Skip If(Hero Of(Event Player) != Hero(Mercy) && Hero Of(Event Player) != Hero(Zarya) && Hero Of(Event Player) != Hero(Lifeweaver),
-			2);
+		Skip If(!Array Contains(Array(Hero(Mercy), Hero(Zenyatta), Hero(Sombra), Hero(Symmetra), Hero(Ramattra)), Hero Of(Event Player)), 2);
 		Set Ability 2 Enabled(Event Player, False);
 		Disallow Button(Event Player, Button(Ability 2));
 	}
@@ -11185,12 +11165,10 @@ rule("CORE: (BOSS) ALL - ABILITY 1 SET")
 
 	actions
 	{
-		Skip If(Hero Of(Event Player) == Hero(Mercy) || Hero Of(Event Player) == Hero(Zenyatta) || Hero Of(Event Player) == Hero(Sombra)
-			|| Hero Of(Event Player) == Hero(Symmetra) || Hero Of(Event Player) == Hero(Ramattra), 2);
+		Skip If(Array Contains(Array(Hero(Mercy), Hero(Zenyatta), Hero(Sombra), Hero(Symmetra), Hero(Ramattra)), Hero Of(Event Player)), 3);
 		Set Ability 1 Enabled(Event Player, True);
 		Allow Button(Event Player, Button(Ability 1));
-		Skip If(Hero Of(Event Player) != Hero(Mercy) && Hero Of(Event Player) != Hero(Zenyatta) && Hero Of(Event Player) != Hero(Sombra)
-			&& Hero Of(Event Player) != Hero(Symmetra) && Hero Of(Event Player) != Hero(Ramattra), 2);
+		Abort;
 		Set Ability 1 Enabled(Event Player, False);
 		Disallow Button(Event Player, Button(Ability 1));
 	}
@@ -11526,7 +11504,7 @@ rule("CORE: (BOSS) General - SIZE")
 	conditions
 	{
 		Has Spawned(Event Player) == True;
-		(Hero Of(Event Player) != Hero(Zarya) && Hero Of(Event Player) != Hero(Sigma) && Hero Of(Event Player) != Hero(Bastion)) == True;
+		Array Contains(Array(Hero(Zarya), Hero(Sigma), Hero(Bastion)), Hero Of(Event Player)) != True;
 	}
 
 	actions
@@ -13938,8 +13916,7 @@ rule("CORE: (BOSS) ALL - CLEAR CHARGE HUD")
 	conditions
 	{
 		Has Spawned(Event Player) == True;
-		(Hero Of(Event Player) != Hero(Ashe) && Hero Of(Event Player) != Hero(Genji) && Hero Of(Event Player) != Hero(Sombra) && Hero Of(
-			Event Player) != Hero(Reinhardt) && Hero Of(Event Player) != Hero(Echo) && True) == True;
+		Array Contains(Array(Hero(Ashe), Hero(Genji), Hero(Sombra), Hero(Reinhardt), Hero(Echo)), Hero Of(Event Player)) == False;
 	}
 
 	actions
@@ -15578,6 +15555,7 @@ rule("MAPS: ANTI-ENVIRO actions")
 
 	conditions
 	{
+<<<<<<< HEAD
 		(Has Spawned(Event Player) == True && Current Map != Map(Ecopoint: Antarctica) && Current Map != Map(Hollywood)
 			&& Current Map != Map(King's Row) && Current Map != Map(King's Row) && Current Map != Map(Temple of Anubis)
 			&& Current Map != Map(Château Guillard) && Current Map != Map(Château Guillard) && Current Map != Map(Horizon Lunar Colony)
@@ -15585,6 +15563,12 @@ rule("MAPS: ANTI-ENVIRO actions")
 			&& Current Map != Map(Workshop Island) && Current Map != Map(Workshop Island) && Current Map != Map(Workshop Green Screen))
 			== True;
 		(Y Component Of(Position Of(Event Player)) < Global.Enviro_Threshold && Is Waiting For Players == False) == True;
+=======
+		(Has Spawned(Event Player) && !Array Contains(Array(Map(Ecopoint: Antarctica), Map(Hollywood), Map(King's Row), Map(
+			Temple of Anubis), Map(Château Guillard), Map(Horizon Lunar Colony), Map(Workshop Chamber), Map(Workshop Expanse), Map(
+			Workshop Island), Map(Workshop Green Screen)), Current Map)) == True;
+		(Y Component Of(Position Of(Event Player)) < Global.Enviro_Threshold && !Is Waiting For Players) == True;
+>>>>>>> eb9cde4 (Array Refactor)
 	}
 
 	actions
@@ -19051,25 +19035,21 @@ rule("CORE: (TEAM) ALL - HARD COOLDOWNS")
 
 	actions
 	{
-		Skip If(Hero Of(Event Player) != Hero(Ana) && Hero Of(Event Player) != Hero(Reinhardt) && Hero Of(Event Player) != Hero(Sombra),
-			6);
+		Skip If(!Array Contains(Array(Hero(Ana), Hero(Reinhardt), Hero(Sojourn)), Hero Of(Event Player)), 6);
 		Abort If(Ability Cooldown(Event Player, Button(Ability 1)) <= 9);
 		Event Player.CD_saver = Ability Cooldown(Event Player, Button(Ability 1));
 		Wait Until(Is Alive(Event Player), 9);
-		Skip If(Hero Of(Event Player) != Hero(Ana) && Hero Of(Event Player) != Hero(Reinhardt) && Hero Of(Event Player) != Hero(Sombra),
-			2);
+		Skip If(!Array Contains(Array(Hero(Ana), Hero(Reinhardt), Hero(Sombra)), Hero Of(Event Player)), 2);
 		Skip If(Ability Cooldown(Event Player, Button(Ability 1)) > Event Player.CD_saver - 9, 1);
 		Set Ability Cooldown(Event Player, Button(Ability 1), Event Player.CD_saver - 7);
-		Skip If(Hero Of(Event Player) != Hero(Orisa) && Hero Of(Event Player) != Hero(Mei) && Hero Of(Event Player) != Hero(Baptiste)
-			&& Hero Of(Event Player) != Hero(Sigma) && Hero Of(Event Player) != Hero(Kiriko) && Hero Of(Event Player) != Hero(Lifeweaver)
-			&& Hero Of(Event Player) != Hero(Mauga) && Hero Of(Event Player) != Hero(Genji), 7);
+		Skip If(!Array Contains(Array(Hero(Orisa), Hero(Mei), Hero(Baptiste), Hero(Sigma), Hero(Kiriko), Hero(Lifeweaver), Hero(Mauga),
+			Hero(Genji)), Hero Of(Event Player)), 7);
 		Wait(5.100, Abort When False);
 		Abort If(Ability Cooldown(Event Player, Button(Ability 2)) <= 3.900);
 		Event Player.CD_saver = Ability Cooldown(Event Player, Button(Ability 2));
 		Wait Until(Is Alive(Event Player), 9);
-		Skip If(Hero Of(Event Player) != Hero(Orisa) && Hero Of(Event Player) != Hero(Mei) && Hero Of(Event Player) != Hero(Baptiste)
-			&& Hero Of(Event Player) != Hero(Sigma) && Hero Of(Event Player) != Hero(Kiriko) && Hero Of(Event Player) != Hero(Lifeweaver)
-			&& Hero Of(Event Player) != Hero(Mauga) && Hero Of(Event Player) != Hero(Genji), 2);
+		Skip If(!Array Contains(Array(Hero(Orisa), Hero(Mei), Hero(Baptiste), Hero(Sigma), Hero(Kiriko), Hero(Lifeweaver), Hero(Mauga),
+			Hero(Genji)), Hero Of(Event Player)), 2);
 		Skip If(Ability Cooldown(Event Player, Button(Ability 2)) > Event Player.CD_saver - 3.900, 1);
 		Set Ability Cooldown(Event Player, Button(Ability 2), Event Player.CD_saver - 1.900);
 		Skip If(Hero Of(Event Player) != Hero(Lúcio), 7);
@@ -20543,8 +20523,8 @@ rule("CORE: (TEAM) ANRAN - IGNITION ACTIVE")
 	conditions
 	{
 		Has Status(Victim, Burning) == True;
-		(Event Ability == Button(Ability 1) || Event Ability == Button(Ability 2) || Event Ability == Button(Ultimate)
-			|| Event Damage > 2 * Global.BossResistanceStat * (Global.BossDamageReceived / 100)) == True;
+		(Array Contains(Array(Button(Ability 1), Button(Ability 2), Button(Ultimate)), Event Ability) ||
+			Event Damage > 2 * Global.BossResistanceStat * (Global.BossDamageReceived / 100)) == True;
 		Event Ability != Button(Melee);
 	}
 
