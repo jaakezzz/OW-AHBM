@@ -3342,12 +3342,7 @@ rule("CORE: (TEAM) ALL - GENERAL SWITCH")
 				Set Max Health(Event Player, 99.379);
 			Else If((Hero Of(Event Player) == Hero(Mercy) || Hero Of(Event Player) == Hero(Domina)) == True);
 				Set Max Health(Event Player, 98.765);
-<<<<<<< HEAD
-			Else If((Hero Of(Event Player) == Hero(Moira) || Hero Of(Event Player) == Hero(Freja) || Hero Of(Event Player) == Hero(Sojourn))
-					== True);
-=======
 			Else If(Array Contains(Array(Hero(Moira), Hero(Freja), Hero(Sojourn)), Hero Of(Event Player)));
->>>>>>> eb9cde4 (Array Refactor)
 				Set Max Health(Event Player, 99.206);
 			Else If(Hero Of(Event Player) == Hero(Tracer));
 				Set Max Health(Event Player, 99.861);
@@ -15555,20 +15550,10 @@ rule("MAPS: ANTI-ENVIRO actions")
 
 	conditions
 	{
-<<<<<<< HEAD
-		(Has Spawned(Event Player) == True && Current Map != Map(Ecopoint: Antarctica) && Current Map != Map(Hollywood)
-			&& Current Map != Map(King's Row) && Current Map != Map(King's Row) && Current Map != Map(Temple of Anubis)
-			&& Current Map != Map(Château Guillard) && Current Map != Map(Château Guillard) && Current Map != Map(Horizon Lunar Colony)
-			&& Current Map != Map(Workshop Chamber) && Current Map != Map(Workshop Expanse) && Current Map != Map(Workshop Expanse)
-			&& Current Map != Map(Workshop Island) && Current Map != Map(Workshop Island) && Current Map != Map(Workshop Green Screen))
-			== True;
-		(Y Component Of(Position Of(Event Player)) < Global.Enviro_Threshold && Is Waiting For Players == False) == True;
-=======
 		(Has Spawned(Event Player) && !Array Contains(Array(Map(Ecopoint: Antarctica), Map(Hollywood), Map(King's Row), Map(
 			Temple of Anubis), Map(Château Guillard), Map(Horizon Lunar Colony), Map(Workshop Chamber), Map(Workshop Expanse), Map(
 			Workshop Island), Map(Workshop Green Screen)), Current Map)) == True;
 		(Y Component Of(Position Of(Event Player)) < Global.Enviro_Threshold && !Is Waiting For Players) == True;
->>>>>>> eb9cde4 (Array Refactor)
 	}
 
 	actions
