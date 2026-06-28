@@ -19623,8 +19623,8 @@ rule("CORE: (BOSS) RAM JUMP")
 		Play Effect(All Players(All Teams), Ring Explosion Sound, Color(White), Event Player, 100);
 		Wait(0.200, Ignore Condition);
 		Chase Player Variable At Rate(Event Player, secondary_charge, 0, 1, Destination and Rate);
-		Wait Until((Is On Ground(Event Player) == True || Is Dead(Event Player) == True) == True, 999);
 		Wait Until(Is On Ground(Event Player) || Is Dead(Event Player), 999);
+		Play Effect(All Players(All Teams), Doomfist Meteor Strike Impact Sound, Color(White), Position Of(Event Player) + Up,
 			500);
 		Wait(0.016, Ignore Condition);
 		Play Effect(All Players(All Teams), Ring Explosion, Color(White), Position Of(Event Player) + Vector(0, 0.200, 0), 25);
