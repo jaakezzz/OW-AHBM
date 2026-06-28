@@ -9470,11 +9470,14 @@ rule("CORE: (TEAM) BRIG - UNPROTECTED HUD")
 		Event Player.team_abilityHUD[0] = Last Text ID;
 		Wait(24, Ignore Condition);
 		Skip If(!Is Hero Being Played(Hero(Mercy), Team 2), 8);
+		Skip If(Global.mercyArmourBool, 4);
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
 		Skip If(Global.mercyArmourBool, 2);
 		Create HUD Text(Event Player, Custom String("UNPROTECTED"), Custom String("press {0}", Input Binding String(Button(Reload))),
 			Custom String("MERCY ARMOUR"), Left, 10, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
-		Skip(1);
+		Event Player.team_abilityHUD[0] = Last Text ID;
+		Skip If(!Global.mercyArmourBool, 4);
+		Destroy HUD Text(Event Player.team_abilityHUD[0]);
 		Create HUD Text(Event Player, Custom String("PROTECTED"), Custom String("armour ready"), Custom String("MERCY ARMOUR"), Left, 10,
 			Color(Blue), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 		Event Player.team_abilityHUD[0] = Last Text ID;
@@ -11482,7 +11485,7 @@ rule("CORE: (BOSS) General - SIZE")
 	conditions
 	{
 		Has Spawned(Event Player) == True;
-		Array Contains(Array(Hero(Zarya), Hero(Sigma), Hero(Bastion)), Hero Of(Event Player)) == True;
+		Array Contains(Array(Hero(Zarya), Hero(Sigma), Hero(Bastion)), Hero Of(Event Player)) != True;
 	}
 
 	actions
