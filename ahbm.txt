@@ -5673,7 +5673,7 @@ rule("CORE: (BOSS) CASS - DODGE ABILITY")
 		Event Player.Ability_Toggle = True;
 		Destroy HUD Text(Global.BOSS_AbilityKey);
 		Skip If(Event Player.U != 0, 2);
-		Create HUD Text(All Players(Team 1), Custom String("{0}+{1}", Input Binding String(Button(Ability 1))), Custom String("EXTENDED"),
+		Create HUD Text(All Players(Team 1), Custom String("{0}+crouch", Input Binding String(Button(Ability 1))), Custom String("EXTENDED"),
 			Custom String("COMBAT ROLL"), Left, 1, Color(White), Color(White), Color(Orange), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Skip If(Event Player.U == 0, 2);
@@ -5701,9 +5701,9 @@ rule("CORE: (BOSS) CASS - ROLL TIMER")
 
 	actions
 	{
-		Wait(0.400, Ignore Condition);
+		Wait(0.200, Ignore Condition);
 		Event Player.U = 2;
-		Wait(2, Ignore Condition);
+		Wait(2.18, Ignore Condition);
 		Event Player.U = 0;
 	}
 }
@@ -5788,11 +5788,8 @@ rule("CORE: (BOSS) CASS - DODGE reset 2")
 
 	actions
 	{
+		Abort If(Global.BOSS_AbilityCD != 0);
 		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Skip If(Global.BOSS_AbilityCD == 0, 2);
-		Create HUD Text(All Players(Team 1), Round To Integer(Global.BOSS_AbilityCD, Up), Custom String("EXTENDED"), Custom String(
-			"COMBAT ROLL"), Left, 1, Color(Orange), Color(White), Color(Orange), Visible To and String, Default Visibility);
-		Skip(1);
 		Create HUD Text(All Players(Team 1), Custom String("{0}+crouch", Input Binding String(Button(Ability 1))), Custom String(
 			"EXTENDED"), Custom String("COMBAT ROLL"), Left, 1, Color(White), Color(White), Color(Orange), Visible To and String,
 			Default Visibility);
@@ -9469,14 +9466,13 @@ rule("CORE: (TEAM) BRIG - UNPROTECTED HUD")
 			"MERCY ARMOUR"), Left, 10, Color(Orange), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 		Event Player.team_abilityHUD[0] = Last Text ID;
 		Wait(24, Ignore Condition);
-		Skip If(!Is Hero Being Played(Hero(Mercy), Team 2), 8);
+		Abort If(!Is Hero Being Played(Hero(Mercy), Team 2));
 		Skip If(Global.mercyArmourBool, 4);
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
-		Skip If(Global.mercyArmourBool, 2);
 		Create HUD Text(Event Player, Custom String("UNPROTECTED"), Custom String("press {0}", Input Binding String(Button(Reload))),
 			Custom String("MERCY ARMOUR"), Left, 10, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 		Event Player.team_abilityHUD[0] = Last Text ID;
-		Skip If(!Global.mercyArmourBool, 4);
+		Abort;
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
 		Create HUD Text(Event Player, Custom String("PROTECTED"), Custom String("armour ready"), Custom String("MERCY ARMOUR"), Left, 10,
 			Color(Blue), Color(White), Color(Yellow), Visible To and String, Default Visibility);
