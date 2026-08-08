@@ -11435,18 +11435,17 @@ rule("CORE: (BOSS) D.VA - MECH THAW")
 		Call Subroutine(BOSSNoAbility_Hud);
 		Stop Chasing Player Variable(Event Player, F);
 		Global.BossFrozen = 0;
-		Skip If(Is Waiting For Players, 11);
-		Skip If(Ultimate Charge Percent(Event Player) > 33, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(Gray), Event Player, 0.500, Visible To Position and Radius);
+		Skip If(Is Waiting For Players, 10);
+		If(Ultimate Charge Percent(Event Player) <= 33);
+			Create Effect(All Players(All Teams), Cloud, Color(Gray), Event Player, 0.500, Visible To Position and Radius);
+		Else If(Ultimate Charge Percent(Event Player) <= 66);
+			Create Effect(All Players(All Teams), Cloud, Color(Rose), Event Player, 0.500, Visible To Position and Radius);
+		Else;
+			Create Effect(All Players(Team 2), Bad Aura, Color(Green), Event Player, 0.100, Visible To Position and Radius);
+			Event Player.PlayerFX_2 = Last Created Entity;
+			Create Effect(All Players(All Teams), Cloud, Color(Green), Event Player, 0.500, Visible To Position and Radius);
+		End;
 		Event Player.N = Last Created Entity;
-		Skip If(Ultimate Charge Percent(Event Player) > 66 || Ultimate Charge Percent(Event Player) <= 33, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(Rose), Event Player, 0.500, Visible To Position and Radius);
-		Event Player.N = Last Created Entity;
-		Skip If(Ultimate Charge Percent(Event Player) <= 66, 4);
-		Create Effect(All Players(All Teams), Cloud, Color(Green), Event Player, 0.500, Visible To Position and Radius);
-		Event Player.N = Last Created Entity;
-		Create Effect(All Players(Team 2), Bad Aura, Color(Green), Event Player, 0.100, Visible To Position and Radius);
-		Event Player.PlayerFX_2 = Last Created Entity;
 		Wait(0.050, Ignore Condition);
 		Destroy Effect(Event Player.PlayerFX_3);
 	}
@@ -19960,7 +19959,7 @@ rule("Damage Numbers 0")
 	conditions
 	{
 		Team Of(Victim) == Team 1;
-		(Event Player.LastDamageNumberInstance == 0 || Event Player.LastDamageNumberInstance == 2) == True;
+		Event Player.LastDamageNumberInstance != 1;
 	}
 
 	actions
@@ -19968,33 +19967,35 @@ rule("Damage Numbers 0")
 		Destroy In-World Text(Event Player.LastDamage[0]);
 		Wait(0.032, Ignore Condition);
 		Destroy In-World Text(Event Player.LastDamage[0]);
-		Skip If(Event Player.LastDamageNumber == 0, 18);
-		Skip If(Event Player.LastDamageNumber >= 10, 2);
-		Event Player.LastDamageNumberTime[0] = 0.333;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1, Clip Against Surfaces, Visible To, Color(White), Default Visibility);
-		Skip If((Event Player.LastDamageNumber < 10 || Event Player.LastDamageNumber >= 45), 2);
-		Event Player.LastDamageNumberTime[0] = 0.500;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1.500, Clip Against Surfaces, Visible To, Custom Color(255, 255, 200, 255),
-			Default Visibility);
-		Skip If((Event Player.LastDamageNumber < 45 || Event Player.LastDamageNumber >= 90), 2);
-		Event Player.LastDamageNumberTime[0] = 0.666;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2, Clip Against Surfaces, Visible To, Custom Color(255, 255, 100, 255),
-			Default Visibility);
-		Skip If((Event Player.LastDamageNumber < 90 || Event Player.LastDamageNumber >= 160), 2);
-		Event Player.LastDamageNumberTime[0] = 1;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2.500, Clip Against Surfaces, Visible To, Color(Yellow),
-			Default Visibility);
-		Skip If(Event Player.LastDamageNumber < 160, 2);
-		Event Player.LastDamageNumberTime[0] = 1.250;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 3, Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
-		Event Player.LastDamage[0] = Last Text ID;
-		Event Player.LastDamageNumberInstance = 1;
-		Wait(Event Player.LastDamageNumberTime[0], Restart When True);
+		If(Event Player.LastDamageNumber > 0);
+			If(Event Player.LastDamageNumber < 10);
+				Event Player.LastDamageNumberTime[0] = 0.333;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1, Clip Against Surfaces, Visible To, Color(White), Default Visibility);
+			Else If(Event Player.LastDamageNumber < 45);
+				Event Player.LastDamageNumberTime[0] = 0.500;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1.500, Clip Against Surfaces, Visible To, Custom Color(255, 255, 200, 255),
+					Default Visibility);
+			Else If(Event Player.LastDamageNumber < 90);
+				Event Player.LastDamageNumberTime[0] = 0.666;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2, Clip Against Surfaces, Visible To, Custom Color(255, 255, 100, 255),
+					Default Visibility);
+			Else If(Event Player.LastDamageNumber < 160);
+				Event Player.LastDamageNumberTime[0] = 1;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2.500, Clip Against Surfaces, Visible To, Color(Yellow),
+					Default Visibility);
+			Else;
+				Event Player.LastDamageNumberTime[0] = 1.250;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 3, Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
+			End;
+			Event Player.LastDamage[0] = Last Text ID;
+			Event Player.LastDamageNumberInstance = 1;
+			Wait(Event Player.LastDamageNumberTime[0], Restart When True);
+		End;
 		Destroy In-World Text(Event Player.LastDamage[0]);
 	}
 }
@@ -20019,33 +20020,35 @@ rule("Damage Numbers 1")
 		Destroy In-World Text(Event Player.LastDamage[0]);
 		Wait(0.032, Ignore Condition);
 		Destroy In-World Text(Event Player.LastDamage[1]);
-		Skip If(Event Player.LastDamageNumber == 0, 18);
-		Skip If(Event Player.LastDamageNumber >= 10, 2);
-		Event Player.LastDamageNumberTime[1] = 0.333;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1, Clip Against Surfaces, Visible To, Color(White), Default Visibility);
-		Skip If((Event Player.LastDamageNumber < 10 || Event Player.LastDamageNumber >= 45), 2);
-		Event Player.LastDamageNumberTime[1] = 0.500;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1.500, Clip Against Surfaces, Visible To, Custom Color(255, 255, 200, 255),
-			Default Visibility);
-		Skip If((Event Player.LastDamageNumber < 45 || Event Player.LastDamageNumber >= 90), 2);
-		Event Player.LastDamageNumberTime[1] = 0.666;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2, Clip Against Surfaces, Visible To, Custom Color(255, 255, 100, 255),
-			Default Visibility);
-		Skip If((Event Player.LastDamageNumber < 90 || Event Player.LastDamageNumber >= 160), 2);
-		Event Player.LastDamageNumberTime[1] = 1;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2.500, Clip Against Surfaces, Visible To, Color(Yellow),
-			Default Visibility);
-		Skip If(Event Player.LastDamageNumber < 160, 2);
-		Event Player.LastDamageNumberTime[1] = 1.250;
-		Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
-			Random Real(0.500, 1), Random Real(-0.500, 0.500)), 3, Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
-		Event Player.LastDamage[1] = Last Text ID;
-		Event Player.LastDamageNumberInstance = 2;
-		Wait(Event Player.LastDamageNumberTime[1], Restart When True);
+		If(Event Player.LastDamageNumber > 0);
+			If(Event Player.LastDamageNumber < 10);
+				Event Player.LastDamageNumberTime[1] = 0.333;
+					Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1, Clip Against Surfaces, Visible To, Color(White), Default Visibility);
+			Else If(Event Player.LastDamageNumber < 45);
+				Event Player.LastDamageNumberTime[1] = 0.500;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 1.500, Clip Against Surfaces, Visible To, Custom Color(255, 255, 200, 255),
+					Default Visibility);
+			Else If(Event Player.LastDamageNumber < 90);
+				Event Player.LastDamageNumberTime[1] = 0.666;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2, Clip Against Surfaces, Visible To, Custom Color(255, 255, 100, 255),
+					Default Visibility);
+			Else If(Event Player.LastDamageNumber < 160);
+				Event Player.LastDamageNumberTime[1] = 1;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 2.500, Clip Against Surfaces, Visible To, Color(Yellow),
+					Default Visibility);
+			Else;
+				Event Player.LastDamageNumberTime[1] = 1.250;
+				Create In-World Text(All Players(Team 2), Event Player.LastDamageNumber, Eye Position(Victim) + Vector(Random Real(-0.500, 0.500),
+					Random Real(0.500, 1), Random Real(-0.500, 0.500)), 3, Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
+			End;
+			Event Player.LastDamage[1] = Last Text ID;
+			Event Player.LastDamageNumberInstance = 2;
+			Wait(Event Player.LastDamageNumberTime[1], Restart When True);
+		End;
 		Destroy In-World Text(Event Player.LastDamage[1]);
 	}
 }
