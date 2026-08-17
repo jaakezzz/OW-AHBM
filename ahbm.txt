@@ -2023,6 +2023,8 @@ subroutines
 	2: BossIgnitionExpire
 	3: TEAMVendetta_StunReady
 	4: BOSSNoAbility_Hud
+	6: BossFrozenNotification
+	7: BossClearFreeze
 }
 
 rule("CORE: (TIMER) SET START TIME")
@@ -3700,22 +3702,10 @@ rule("CORE: (BOSS) REIN - FLAME FROZEN")
 	actions
 	{
 		Event Player.primary_charge -= 1;
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 15;
-		Global.BossFrozen = -1;
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Event Player.F, Up)), Custom String("THAWING"), Custom String("FIRE STRIKE"), Left, 1, Color(Sky Blue), Color(White), Color(
-			Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
+		Global.BossFrozen = Array(-1, Custom String("Fire Strike"), 2);
+		Call Subroutine(BossFrozenNotification);
 		Set Ability 2 Enabled(Event Player, False);
 		Clear Status(Event Player, Burning);
-		Small Message(All Players(All Teams), Custom String("Fire Strike Frozen: 15 seconds"));
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 2, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
 	}
 }
 
@@ -5753,21 +5743,8 @@ rule("CORE: (BOSS) HOG - ULTIMATE FROZEN")
 		Wait(0.250, Ignore Condition);
 		Set Ultimate Ability Enabled(Event Player, False);
 		Destroy Effect(Event Player.H);
-		Clear Status(Event Player, Burning);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 15;
-		Global.BossFrozen = -1;
-		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
-		Small Message(All Players(Team 1), Custom String("Whole Hog Frozen: 15 seconds"));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Event Player.F, Up)), Custom String("THAWING"), Custom String("WHOLE HOG"), Left, 1, Color(Sky Blue), Color(White), Color(
-			Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 2, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
+		Global.BossFrozen = Array(-1, Custom String("Whole Hog"), 2);
+		Call Subroutine(BossFrozenNotification);
 	}
 }
 
@@ -8353,7 +8330,6 @@ rule("CORE: (TEAM) JUNK - STUN OFF")
 		Chase Player Variable At Rate(Event Player, primary_charge, 0, 1, Destination and Rate);
 		Destroy Effect(Event Player.PlayerFX_1);
 		Wait(15, Ignore Condition);
-		Skip If(Hero Of(Event Player) != Hero(Junkrat), 7);
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
 		Create HUD Text(Event Player, Icon String(Dizzy), Custom String("press {0} and hit the Boss", Input Binding String(Button(
 			Ability 2))), Custom String("STUN DAMAGE"), Left, 10, Color(Red), Color(White), Color(Red), Visible To and String,
@@ -8400,7 +8376,6 @@ rule("CORE: (TEAM) JUNK - STUN DMG")
 		Wait(0.750, Ignore Condition);
 		Destroy Effect(Victim.statusFX);
 		Wait(14.250, Ignore Condition);
-		Skip If(Hero Of(Event Player) != Hero(Junkrat), 7);
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
 		Create HUD Text(Event Player, Icon String(Dizzy), Custom String("press {0} and hit the Boss", Input Binding String(Button(
 			Ability 2))), Custom String("STUN DAMAGE"), Left, 10, Color(Red), Color(White), Color(Red), Visible To and String,
@@ -10486,25 +10461,11 @@ rule("CORE: (BOSS) JUNK - FIRE DMG FROZEN")
 		Event Player.X[0] = 0.100;
 		Wait(0.250, Ignore Condition);
 		Set Damage Dealt(Event Player, 100);
+		Global.BossFrozen = Array(-1, Custom String("FIRE DMG"), 1);
 		Clear Status(Event Player, Burning);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 15;
-		Global.BossFrozen = -1;
-		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
-		Small Message(All Players(Team 1), Custom String("FIRE DAMAGE Frozen: 15 seconds"));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Event Player.F, Up)), Custom String("THAWING"), Custom String("FIRE DAMAGE"), Left, 1, Color(Sky Blue), Color(White), Color(
-			Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 1, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
-		Wait(15, Restart When True);
-		Abort If(Hero Of(Event Player) != Hero(Junkrat));
-		Destroy Effect(Event Player.PlayerFX_3);
-		Destroy HUD Text(Global.BOSS_AbilityKey);
+		Call Subroutine(BossFrozenNotification);
+		Wait(Round To Integer(Event Player.F, Up), Restart When True);
+		Call Subroutine(BossClearFreeze);
 		Skip If(Is Portrait On Fire(Event Player), 2);
 		Create HUD Text(All Players(Team 1), Icon String(Warning), Custom String("get kills to deal more damage"), Custom String(
 			"fire damage"), Left, 1, Color(Red), Color(White), Color(Orange), Visible To and String, Default Visibility);
@@ -10516,7 +10477,6 @@ rule("CORE: (BOSS) JUNK - FIRE DMG FROZEN")
 			Color(Orange), Color(White), Color(Orange), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Event Player.X[0] = 0;
-		Global.BossFrozen = 0;
 	}
 }
 
@@ -10544,20 +10504,8 @@ rule("CORE: (BOSS) ASHE - DYNAMITE FROZEN")
 		Wait(0.250, Ignore Condition);
 		Set Ability Cooldown(Event Player, Button(Ability 2), 0);
 		Set Ability 2 Enabled(Event Player, False);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 15;
-		Global.BossFrozen = -1;
-		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
-		Small Message(All Players(Team 1), Custom String("Dynamite Frozen: 15 seconds"));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Event Player.F, Up)), Custom String("THAWING"), Custom String("DYNAMITE"), Left, 1, Color(Sky Blue), Color(White), Color(
-			Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 1, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
+		Global.BossFrozen = Array(-1, Custom String("Dynamite"), 1);
+		Call Subroutine(BossFrozenNotification);
 	}
 }
 
@@ -10975,10 +10923,7 @@ rule("CORE: (BOSS) REIN - FIRE THAW")
 		Skip If(Is Alive(Event Player), 3);
 		Set Ability 2 Enabled(Event Player, True);
 		Event Player.primary_charge += 1;
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Global.BossFrozen = 0;
-		Wait(0.050, Ignore Condition);
-		Destroy Effect(Event Player.PlayerFX_3);
+		Call Subroutine(BossClearFreeze);
 	}
 }
 
@@ -11000,7 +10945,7 @@ rule("CORE: (BOSS) HOG - ULTIMATE THAW")
 
 	actions
 	{
-		Destroy Effect(Event Player.PlayerFX_3);
+		Call Subroutine(BossClearFreeze);
 		Set Ultimate Ability Enabled(Event Player, True);
 		Wait(0.016, Ignore Condition);
 		Set Ultimate Charge(Event Player, Event Player.X[0]);
@@ -11009,8 +10954,6 @@ rule("CORE: (BOSS) HOG - ULTIMATE THAW")
 		Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
 		Set Status(Event Player, Null, Burning, 9999);
 		Call Subroutine(BOSSNoAbility_Hud);
-		Stop Chasing Player Variable(Event Player, F);
-		Global.BossFrozen = 0;
 		Skip If(Is Waiting For Players, 4);
 		Skip If(Ultimate Charge Percent(Event Player) > 70, 2);
 		Destroy Effect(Event Player.H);
@@ -11030,10 +10973,8 @@ rule("CORE: (BOSS) HOG - ULTIMATE THAW DEATH")
 
 	actions
 	{
-		Destroy Effect(Event Player.PlayerFX_3);
+		Call Subroutine(BossClearFreeze);
 		Call Subroutine(BOSSNoAbility_Hud);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 0;
 		Set Ultimate Ability Enabled(Event Player, True);
 		Skip If(Is Waiting For Players, 4);
 		Skip If(Ultimate Charge Percent(Event Player) > 70, 2);
@@ -11060,11 +11001,10 @@ rule("CORE: (BOSS) ASHE - DYNAMITE THAW")
 
 	actions
 	{
-		Destroy Effect(Event Player.PlayerFX_3);
+		Call Subroutine(BossClearFreeze);
 		Set Ability 2 Enabled(Event Player, True);
 		Set Ability Cooldown(Event Player, Button(Ability 2), Event Player.X[0]);
 		Allow Button(Event Player, Button(Ability 2));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
 		Skip If(Event Player.Ability_Bool, 2);
 		Create HUD Text(All Players(Team 1), Ability Icon String(Hero(Ashe), Button(Primary Fire)), Custom String(
 			"Primary Ammo Active | Hold {0} to use/reload the scope", Input Binding String(Button(Secondary Fire))), Custom String(
@@ -11076,7 +11016,6 @@ rule("CORE: (BOSS) ASHE - DYNAMITE THAW")
 			Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Event Player.X[0] = 0;
-		Global.BossFrozen = 0;
 	}
 }
 
@@ -11098,20 +11037,8 @@ rule("CORE: (BOSS) TORB - ULTIMATE FROZEN")
 	{
 		Wait(0.250, Ignore Condition);
 		Set Ultimate Ability Enabled(Event Player, False);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 15;
-		Global.BossFrozen = -1;
-		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
-		Small Message(All Players(Team 1), Custom String("Molten Core Frozen: 15 seconds"));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Event Player.F, Up)), Custom String("THAWING"), Custom String("Molten Core"), Left, 1, Color(Sky Blue), Color(White), Color(
-			Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 1, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
+		Global.BossFrozen = Array(-1, Custom String("Molten Core"), 1);
+		Call Subroutine(BossFrozenNotification);
 	}
 }
 
@@ -11133,12 +11060,10 @@ rule("CORE: (BOSS) TORB - ULTIMATE THAW")
 
 	actions
 	{
-		Destroy Effect(Event Player.PlayerFX_3);
+		Call Subroutine(BossClearFreeze);
 		Set Ultimate Ability Enabled(Event Player, True);
 		Wait(0.016, Ignore Condition);
 		Call Subroutine(BOSSNoAbility_Hud);
-		Stop Chasing Player Variable(Event Player, F);
-		Global.BossFrozen = 0;
 	}
 }
 
@@ -11153,10 +11078,8 @@ rule("CORE: (BOSS) TORB - ULTIMATE THAW DEATH")
 
 	actions
 	{
-		Destroy Effect(Event Player.PlayerFX_3);
+    Call Subroutine(BossClearFreeze);
 		Call Subroutine(BOSSNoAbility_Hud);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 0;
 		Set Ultimate Ability Enabled(Event Player, True);
 	}
 }
@@ -11180,17 +11103,8 @@ rule("CORE: (BOSS) HAM - SLAM FROZEN")
 		Wait(0.750, Ignore Condition);
 		Set Ability Cooldown(Event Player, Button(Crouch), 15);
 		Wait(0.016, Ignore Condition);
-		Global.BossFrozen = -1;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 2, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
-		Small Message(All Players(Team 1), Custom String("Piledriver Frozen: 15 seconds"));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Ability Cooldown(Event Player, Button(Crouch)), Up)), Custom String("THAWING"), Custom String("Piledriver"), Left, 1, Color(
-			Sky Blue), Color(White), Color(Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
+		Global.BossFrozen = Array(-1, Custom String("Piledriver"), 2);
+		Call Subroutine(BossFrozenNotification);
 	}
 }
 
@@ -11211,10 +11125,8 @@ rule("CORE: (BOSS) HAM - SLAM THAW")
 
 	actions
 	{
+		Call Subroutine(BossClearFreeze);
 		Set Ability Cooldown(Event Player, Button(Crouch), 0);
-		Destroy Effect(Event Player.PlayerFX_3);
-		Global.BossFrozen = 0;
-		Destroy HUD Text(Global.BOSS_AbilityKey);
 		Skip If(Max Health(Event Player) < 1001, 2);
 		Create HUD Text(Event Player, Ability Icon String(Hero(Wrecking Ball), Button(Ability 2)), Custom String(
 			"rapidly press shields to keep them active!"), Custom String("SHIELDS ACTIVE"), Left, 1, Color(Green), Color(White), Color(
@@ -11224,8 +11136,6 @@ rule("CORE: (BOSS) HAM - SLAM THAW")
 			"rapidly press shields to keep them active!"), Custom String("SHIELDS DOWN"), Left, 1, Color(Red), Color(White), Color(Red),
 			Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
-		Wait(0.050, Ignore Condition);
-		Destroy Effect(Event Player.PlayerFX_3);
 	}
 }
 
@@ -11248,20 +11158,8 @@ rule("CORE: (BOSS) OMNIC - JUMP FROZEN")
 	{
 		Wait(0.250, Ignore Condition);
 		Set Jump Vertical Speed(Event Player, 33);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 15;
-		Global.BossFrozen = -1;
-		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
-		Small Message(All Players(Team 1), Custom String("Super Jump Frozen: 15 seconds"));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Event Player.F, Up)), Custom String("THAWING"), Custom String("Super Jumps"), Left, 1, Color(Sky Blue), Color(White), Color(
-			Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 1, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
+		Global.BossFrozen = Array(-1, Custom String("Super Jump"), 1);
+		Call Subroutine(BossFrozenNotification);
 	}
 }
 
@@ -11283,11 +11181,8 @@ rule("CORE: (BOSS) OMNIC - JUMP THAW")
 
 	actions
 	{
+		Call Subroutine(BossClearFreeze);
 		Set Jump Vertical Speed(Event Player, 100);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 0;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Global.BossFrozen = 0;
 		Call Subroutine(BOSSNoAbility_Hud);
 	}
 }
@@ -11314,20 +11209,8 @@ rule("CORE: (BOSS) D.VA - MECH FROZEN")
 		Wait(0.250, Ignore Condition);
 		Set Ultimate Ability Enabled(Event Player, False);
 		Set Ability 1 Enabled(Event Player, False);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 15;
-		Global.BossFrozen = -1;
-		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
-		Small Message(All Players(Team 1), Custom String("Mech Fuel Frozen: 15 seconds"));
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
-			Event Player.F, Up)), Custom String("THAWING"), Custom String("Mech Fuel"), Left, 1, Color(Sky Blue), Color(White), Color(
-			Sky Blue), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Destroy Effect(Event Player.PlayerFX_3);
-		Skip If(Is Waiting For Players, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, 1, Visible To Position and Radius);
-		Event Player.PlayerFX_3 = Last Created Entity;
+		Global.BossFrozen = Array(-1, Custom String("Mech Fuel"), 1);
+		Call Subroutine(BossFrozenNotification);
 	}
 }
 
@@ -11349,15 +11232,13 @@ rule("CORE: (BOSS) D.VA - MECH THAW")
 
 	actions
 	{
-		Destroy Effect(Event Player.PlayerFX_3);
+		Call Subroutine(BossClearFreeze);
 		Set Ultimate Ability Enabled(Event Player, True);
 		Set Ability 1 Enabled(Event Player, True);
 		Wait(0.016, Ignore Condition);
 		Skip If(Is In Alternate Form(Event Player), 1);
 		Set Ultimate Charge(Event Player, Event Player.X[0]);
 		Call Subroutine(BOSSNoAbility_Hud);
-		Stop Chasing Player Variable(Event Player, F);
-		Global.BossFrozen = 0;
 		Skip If(Is Waiting For Players, 11);
 		Skip If(Ultimate Charge Percent(Event Player) > 33, 2);
 		Create Effect(All Players(All Teams), Cloud, Color(Gray), Event Player, 0.500, Visible To Position and Radius);
@@ -11386,10 +11267,8 @@ rule("CORE: (BOSS) D.VA - MECH THAW DEATH")
 
 	actions
 	{
-		Destroy Effect(Event Player.PlayerFX_3);
+		Call Subroutine(BossClearFreeze);
 		Call Subroutine(BOSSNoAbility_Hud);
-		Stop Chasing Player Variable(Event Player, F);
-		Event Player.F = 0;
 		Set Ultimate Ability Enabled(Event Player, True);
 		Set Ability 1 Enabled(Event Player, True);
 	}
@@ -19951,7 +19830,7 @@ rule("SUB: (BOSS) Init No Ability HUD")
 		Subroutine;
 		BOSSNoAbility_Hud;
 	}
-
+  
 	actions
 	{
 		Destroy HUD Text(Global.BOSS_AbilityKey);
@@ -19960,3 +19839,48 @@ rule("SUB: (BOSS) Init No Ability HUD")
 		Global.BOSS_AbilityKey = Last Text ID;
 	}
 }
+
+rule("CORE: (BOSS) FROZEN NOTIFICATION")
+{
+	event
+	{
+		Subroutine;
+		BossFrozenNotification;
+	}
+
+	actions
+	{
+		Stop Chasing Player Variable(Event Player, F);
+		Event Player.F = 15;
+		Chase Player Variable At Rate(Event Player, F, 0, 1, Destination and Rate);
+		Small Message(Event Player, Custom String("{0} Frozen: {1} seconds", Global.BossFrozen[1], Event Player.F));
+		Destroy HUD Text(Global.BOSS_AbilityKey);
+		Create HUD Text(Event Player, Custom String("{0} {1}", Ability Icon String(Hero(Mei), Button(Ultimate)), Round To Integer(
+			Event Player.F, Up)), Custom String("THAWING"), Global.BossFrozen[1], Left, 1, Color(Sky Blue), Color(White), Color(Sky Blue),
+			String, Default Visibility);
+		Global.BOSS_AbilityKey = Last Text ID;
+		Destroy Effect(Event Player.PlayerFX_3);
+		Skip If(Is Waiting For Players, 2);
+		Create Effect(All Players(All Teams), Cloud, Color(White), Event Player, Global.BossFrozen[2], Visible To Position and Radius);
+		Event Player.PlayerFX_3 = Last Created Entity;
+	}
+}
+
+rule("CORE: (BOSS) THAW RESET")
+{
+	event
+	{
+		Subroutine;
+		BossClearFreeze;
+	}
+
+	actions
+	{
+		Destroy Effect(Event Player.PlayerFX_3);
+		Destroy HUD Text(Global.BOSS_AbilityKey);
+		Stop Chasing Player Variable(Event Player, F);
+		Event Player.F = 0;
+		Global.BossFrozen = 0;
+	}
+}
+
