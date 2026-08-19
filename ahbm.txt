@@ -16469,13 +16469,13 @@ rule("CORE: (TEAM) PHARAH - FLY SPEED")
 
 	conditions
 	{
-		Speed Of In Direction(Event Player, Vector(0, 1, 0)) > 0;
+		Speed Of In Direction(Event Player, Up) > 0;
 	}
 
 	actions
 	{
 		Set Move Speed(Event Player, 54);
-		Wait Until(Speed Of In Direction(Event Player, Vector(0, 1, 0)) <= 0, 99999);
+		Wait Until(Speed Of In Direction(Event Player, Up) <= 0, 99999);
 		Set Move Speed(Event Player, 100);
 		Wait(0.100, Ignore Condition);
 		Loop If Condition Is True;
@@ -18724,12 +18724,12 @@ rule("CORE: (BOSS) RAM JUMP")
 		Wait(0.200, Ignore Condition);
 		Chase Player Variable At Rate(Event Player, secondary_charge, 0, 1, Destination and Rate);
 		Wait Until(Is On Ground(Event Player) || Is Dead(Event Player), 999);
-		Play Effect(All Players(All Teams), Doomfist Meteor Strike Impact Sound, Color(White), Position Of(Event Player) + Vector(0, 1, 0),
+		Play Effect(All Players(All Teams), Doomfist Meteor Strike Impact Sound, Color(White), Position Of(Event Player) + Up,
 			500);
 		Wait(0.016, Ignore Condition);
 		Play Effect(All Players(All Teams), Ring Explosion, Color(White), Position Of(Event Player) + Vector(0, 0.200, 0), 25);
 		Wait(0.016, Ignore Condition);
-		Play Effect(All Players(All Teams), Bad Explosion, Color(Rose), Position Of(Event Player) + Vector(0, 1, 0), 8);
+		Play Effect(All Players(All Teams), Bad Explosion, Color(Rose), Position Of(Event Player) + Up, 8);
 		Apply Impulse(Players Within Radius(Event Player, 13, Team 2, Surfaces And Enemy Barriers), Up, 6.666, To World,
 			Cancel Contrary Motion);
 		Set Status(Players Within Radius(Event Player, 13, Team 2, Surfaces And Enemy Barriers), Event Player, Rooted, 0.666);
