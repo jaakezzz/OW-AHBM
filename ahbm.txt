@@ -3827,7 +3827,7 @@ rule("CORE: (BOSS) REIN - SPAWN")
 	}
 }
 
-rule("CORE: (BOSS) GENJI - DASH AURA ON (check: does D have to = 0?)")
+rule("CORE: (BOSS) GENJI - DASH AURA ON")
 {
 	event
 	{
@@ -3838,7 +3838,6 @@ rule("CORE: (BOSS) GENJI - DASH AURA ON (check: does D have to = 0?)")
 
 	conditions
 	{
-		Event Player.D == 0;
 		disabled Is Waiting For Players == False;
 	}
 
@@ -3850,8 +3849,7 @@ rule("CORE: (BOSS) GENJI - DASH AURA ON (check: does D have to = 0?)")
 		Destroy Effect(Event Player.S);
 		Create Effect(All Players(Team 2), Bad Aura, Color(Lime Green), Event Player, 0.100, Visible To Position and Radius);
 		Event Player.S = Last Created Entity;
-		disabled Stop Chasing Player Variable(Event Player, D);
-		Event Player.D = 1;
+		Set Ability 1 Enabled(Event Player, True);
 	}
 }
 
@@ -3874,8 +3872,7 @@ rule("CORE: (BOSS) GENJI - DASH AURA OFF")
 	{
 		Skip If(Is Waiting For Players, 1);
 		Destroy Effect(Event Player.S);
-		disabled Chase Player Variable At Rate(Event Player, D, 0, 1, Destination and Rate);
-		Event Player.D = 5;
+		Set Ability 1 Enabled(Event Player, False);
 	}
 }
 
@@ -3899,8 +3896,7 @@ rule("CORE: (BOSS) GENJI - DASH RESET KILL")
 		Destroy Effect(Event Player.S);
 		Create Effect(All Players(Team 2), Bad Aura, Color(Lime Green), Event Player, 0.100, Visible To Position and Radius);
 		Event Player.S = Last Created Entity;
-		disabled Stop Chasing Player Variable(Event Player, D);
-		Event Player.D = 1;
+		Set Ability 1 Enabled(Event Player, True);
 	}
 }
 
@@ -3925,8 +3921,7 @@ rule("CORE: (BOSS) GENJI - DASH RESET ULT")
 		Destroy Effect(Event Player.S);
 		Create Effect(All Players(Team 2), Bad Aura, Color(Lime Green), Event Player, 0.100, Visible To Position and Radius);
 		Event Player.S = Last Created Entity;
-		disabled Stop Chasing Player Variable(Event Player, D);
-		Event Player.D = 1;
+		Set Ability 1 Enabled(Event Player, True);
 	}
 }
 
@@ -3951,29 +3946,8 @@ rule("CORE: (BOSS) GENJI - SWITCH")
 		Skip If(Event Player.S == Null, 2);
 		Destroy Effect(Event Player.S);
 		Event Player.S = Null;
-		Event Player.D = 0;
 		disabled Skip If(Array Contains(Array(Hero(Mercy), Hero(Symmetra), Hero(Zenyatta), Hero(Torbjörn)), Hero Of(Event Player)), 1);
 		disabled Set Ability 1 Enabled(Event Player, True);
-	}
-}
-
-rule("CORE: (BOSS) GENJI - DASH LOCK/UNLOCK")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		Genji;
-	}
-
-	actions
-	{
-		Skip If(Event Player.D == 1, 1);
-		Set Ability 1 Enabled(Event Player, False);
-		Skip If(Event Player.D == 5, 1);
-		Set Ability 1 Enabled(Event Player, True);
-		Wait(0.001, Ignore Condition);
-		Loop If Condition Is True;
 	}
 }
 
