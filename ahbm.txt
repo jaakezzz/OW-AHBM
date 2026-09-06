@@ -1071,7 +1071,6 @@ settings
 				Dancing Blaze Cooldown Time: 200%
 				Healing Dealt: 250%
 				Healing Received: 80%
-				Health: 90%
 				Inferno Rush Cooldown Time: 100%
 				Movement Speed: 115%
 				Passive Health Regeneration: On
@@ -1531,11 +1530,11 @@ settings
 				Ammunition Clip Size Scalar: 60%
 				Binding Chain Cooldown Time: 333%
 				Damage Dealt: 60%
-				Healing Dealt: 80%
-				Healing Kasa Cooldown Time: 400%
+				Healing Dealt: 50%
+				Healing Kasa Cooldown Time: 500%
 				Healing Received: 75%
-				Katashiro Return Cooldown Time: 150%
-				Katashiro Return Duration Scalar: 181.81%
+				Katashiro Return Cooldown Time: 75%
+				Katashiro Return Duration Scalar: 218%
 				Passive Health Regeneration: Off
 				Role Passives: On
 				Ultimate Generation - Combat Kekkai Sanctuary: 115%
@@ -2263,10 +2262,7 @@ rule("CORE: (SCORE) BOSS DEATH")
 
 	actions
 	{
-		Skip If(Is Waiting For Players, 3);
-		Skip If(Count Of(Players On Hero(Hero(Anran), Team 2)) == 0, 1);
-		Create HUD Text(All Players(All Teams), Custom String("{0} Ignition Bonus: {1}", Hero Icon String(Hero(Anran)), Round To Integer(Global.BossIgnitedDamageTaken, To Nearest)), Null, Null,
-			Right, 10, Color(Team 2), Color(White), Color(White), String, Default Visibility);
+		Skip If(Is Waiting For Players, 1);
 		Set Status(All Players(Team 2), Null, Invincible, 10);
 		Disable Built-In Game Mode Announcer;
 		Wait(1.800, Ignore Condition);
@@ -2656,7 +2652,7 @@ rule("CORE: (MSGS) NO MERCY MESSAGE")
 	}
 }
 
-rule("CORE: (MSGS) ALIVE MERCY MESSAGE")
+rule("CORE: (MSGS) ALIVE MERCY RES READY MESSAGE")
 {
 	event
 	{
@@ -2668,19 +2664,39 @@ rule("CORE: (MSGS) ALIVE MERCY MESSAGE")
 		Is Hero Being Played(Hero(Mercy), Team 2) == True;
 		Is Alive(Players On Hero(Hero(Mercy), Team 2)) == True;
 		Is Waiting For Players == False;
+		Total Time Elapsed > Global.Res_CD;
 	}
 
 	actions
 	{
 		Destroy HUD Text(Global.Mercy_State);
-		Skip If(Global.Res_CD == -1, 3);
-		Create HUD Text(All Players(All Teams), Custom String("{0} {1}", Round To Integer(Global.Res_CD, Up), Hero Icon String(Hero(
-			Mercy))), Null, Null, Top, -5, Color(White), Color(White), Color(Yellow), Visible To and String, Visible Always);
-		Global.Mercy_State = Last Text ID;
-		Abort;
 		Create HUD Text(All Players(All Teams), Custom String("{0} {1}", Ability Icon String(Hero(Mercy), Button(Ability 2)),
 			Hero Icon String(Hero(Mercy))), Null, Null, Top, -5, Color(Yellow), Color(White), Color(Yellow), Visible To and String,
 			Visible Always);
+		Global.Mercy_State = Last Text ID;
+	}
+}
+
+rule("CORE: (MSGS) ALIVE MERCY RES COOLDOWN MESSAGE")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Hero Being Played(Hero(Mercy), Team 2) == True;
+		Is Alive(Players On Hero(Hero(Mercy), Team 2)) == True;
+		Is Waiting For Players == False;
+		Total Time Elapsed <= Global.Res_CD;
+	}
+
+	actions
+	{
+		Destroy HUD Text(Global.Mercy_State);
+		Create HUD Text(All Players(All Teams), Custom String("{0} {1}", Round To Integer(Global.Res_CD - Total Time Elapsed, Up), Hero Icon String(Hero(
+			Mercy))), Null, Null, Top, -5, Color(White), Color(White), Color(Yellow), Visible To and String, Visible Always);
 		Global.Mercy_State = Last Text ID;
 	}
 }
@@ -2713,31 +2729,6 @@ rule("CORE: (MSGS) DEAD MERCY MESSAGE")
 		Chase Global Variable At Rate(SK_RESPAWN, 0, 1, None);
 		Wait(7, Ignore Condition);
 		Stop Chasing Global Variable(SK_RESPAWN);
-	}
-}
-
-rule("CORE: (MSGS) RES UP MERCY MESSAGE")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Mercy), Team 2) == True;
-		Is Waiting For Players == False;
-		Global.Res_CD == -1;
-	}
-
-	actions
-	{
-		Skip If(Is Dead(Players On Hero(Hero(Mercy), Team 2)), 8);
-		Destroy HUD Text(Global.Mercy_State);
-		Create HUD Text(All Players(All Teams), Custom String("{0} {1}", Ability Icon String(Hero(Mercy), Button(Ability 2)),
-			Hero Icon String(Hero(Mercy))), Null, Null, Top, -5, Color(Yellow), Color(White), Color(Orange), Visible To and String,
-			Visible Always);
-		Global.Mercy_State = Last Text ID;
 	}
 }
 
@@ -3192,16 +3183,15 @@ rule("CORE: (TEAM) MERCY: RES AURA ON .................... SHANALOTTE")
 	{
 		Is Waiting For Players == False;
 		Is Hero Being Played(Hero(Mercy), Team 2) == True;
-		Global.Res_CD == 0;
+		Total Time Elapsed >= Global.Res_CD;
 	}
 
 	actions
 	{
-		Stop Chasing Global Variable(Res_CD);
 		Destroy Effect(Event Player.M);
 		Create Effect(All Players(All Teams), Ring, Color(Yellow), Event Player, 0.500, Position and Radius);
 		Event Player.M = Last Created Entity;
-		Global.Res_CD = -1;
+		Event Player.S = False;
 		Set Healing Received(Event Player, 100);
 	}
 }
@@ -3225,42 +3215,9 @@ rule("CORE: (TEAM) MERCY: RES AURA OFF ..................SHANALOTTE")
 	actions
 	{
 		Destroy Effect(Event Player.M);
-		Global.Res_CD = 5;
+		Global.Res_CD = Total Time Elapsed + 5;
 		Event Player.S = False;
 		Set Healing Received(Event Player, 20);
-		Skip If(Is Alive(Players On Hero(Hero(Mercy), Team 2)) == False, 3);
-		Destroy HUD Text(Global.Mercy_State);
-		Create HUD Text(All Players(All Teams), Custom String("{0} {1}", Round To Integer(Global.Res_CD, Up), Hero Icon String(Hero(
-			Mercy))), Null, Null, Top, -5, Color(White), Color(White), Color(Yellow), Visible To and String, Visible Always);
-		Global.Mercy_State = Last Text ID;
-	}
-}
-
-rule("CORE: (TEAM) MERCY: RES COOLDOWN")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Is Waiting For Players == False;
-		Global.Res_CD > 0;
-	}
-
-	actions
-	{
-		Wait(1, Ignore Condition);
-		Global.Res_CD -= 1;
-		Wait(1, Ignore Condition);
-		Global.Res_CD -= 1;
-		Wait(1, Ignore Condition);
-		Global.Res_CD -= 1;
-		Wait(1, Ignore Condition);
-		Global.Res_CD -= 1;
-		Wait(1, Ignore Condition);
-		Global.Res_CD -= 1;
 	}
 }
 
@@ -3283,33 +3240,6 @@ rule("CORE: (TEAM) MERCY: RES AURA DELETE")
 	{
 		Destroy Effect(Event Player.M);
 		Event Player.S = False;
-	}
-}
-
-rule("CORE: (TEAM) MERCY: RES AURA RECREATE")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 2;
-		Mercy;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Mercy), Team 2) == True;
-		Is Waiting For Players == False;
-	}
-
-	actions
-	{
-		Destroy Effect(Event Player.M);
-		Wait(0.016, Ignore Condition);
-		Create Effect(All Players(All Teams), Ring, Color(Yellow), Event Player, 0.500, Position and Radius);
-		Event Player.M = Last Created Entity;
-		Event Player.S = False;
-		Global.Res_CD = -1;
-		Set Healing Received(Event Player, 100);
 	}
 }
 
@@ -12018,32 +11948,6 @@ rule("CORE: (TEAM) MOIRA - USE DMG ORB HUD")
 	}
 }
 
-rule("CORE: (MSGS) -6 RES COOLDOWN BUG")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Mercy), Team 2) == True;
-		Global.Res_CD == -6;
-		Is Alive(Players On Hero(Hero(Mercy), Team 2)) == True;
-	}
-
-	actions
-	{
-		Stop Chasing Global Variable(Res_CD);
-		Global.Res_CD = -1;
-		Destroy HUD Text(Global.Mercy_State);
-		Create HUD Text(All Players(All Teams), Custom String("{0} {1}", Ability Icon String(Hero(Mercy), Button(Ability 2)),
-			Hero Icon String(Hero(Mercy))), Null, Null, Top, -5, Color(Yellow), Color(White), Color(Orange), Visible To and String,
-			Visible Always);
-		Global.Mercy_State = Last Text ID;
-	}
-}
-
 rule("CORE: (TEAM) ALL - NO AOE HEAL")
 {
 	event
@@ -13739,7 +13643,7 @@ rule("CORE: (TEAM) REAP - ENERGY BUFFS")
 	actions
 	{
 		Set Damage Dealt(Event Player, 140);
-		Add Health Pool To Player(Event Player, Health, 125, False, False);
+		Add Health Pool To Player(Event Player, Health, 100, False, False);
 		Event Player.shield_pool = Last Created Health Pool;
 		Set Move Speed(Event Player, 125);
 		Set Ammo(Event Player, 0, 16);
@@ -19463,8 +19367,7 @@ rule("CORE: (TEAM) ANRAN - SPAWN")
 		Create HUD Text(Event Player, Icon String(Fire), Custom String("IGNITED BOSS TAKES MORE DAMAGE FROM ALLIES"), Custom String(
 			"IGNITION EFFECT"), Left, 10, Color(Orange), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 		Event Player.team_abilityHUD[0] = Last Text ID;
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Custom String(" \n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}", Round To Integer(Global.BossIgnitedDamageTaken, To Nearest)), Null, Top, 10.100,
+		Create HUD Text(Event Player, Null, Custom String("DAMAGE AMPLIFIED: {0}", Global.BossIgnitedDamageTaken), Null, Left, 10.100,
 			Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 	}
