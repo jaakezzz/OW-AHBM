@@ -1072,6 +1072,7 @@ settings
 				Dancing Blaze Cooldown Time: 200%
 				Healing Dealt: 250%
 				Healing Received: 80%
+				Health: 90%
 				Inferno Rush Cooldown Time: 100%
 				Movement Speed: 115%
 				Passive Health Regeneration: On
@@ -1531,11 +1532,11 @@ settings
 				Ammunition Clip Size Scalar: 60%
 				Binding Chain Cooldown Time: 333%
 				Damage Dealt: 60%
-				Healing Dealt: 50%
-				Healing Kasa Cooldown Time: 500%
+				Healing Dealt: 80%
+				Healing Kasa Cooldown Time: 400%
 				Healing Received: 75%
-				Katashiro Return Cooldown Time: 75%
-				Katashiro Return Duration Scalar: 218%
+				Katashiro Return Cooldown Time: 150%
+				Katashiro Return Duration Scalar: 181.81%
 				Passive Health Regeneration: Off
 				Role Passives: On
 				Ultimate Generation - Combat Kekkai Sanctuary: 115%
@@ -2262,7 +2263,10 @@ rule("CORE: (SCORE) BOSS DEATH")
 
 	actions
 	{
-		Skip If(Is Waiting For Players, 1);
+		Skip If(Is Waiting For Players, 3);
+		Skip If(Count Of(Players On Hero(Hero(Anran), Team 2)) == 0, 1);
+		Create HUD Text(All Players(All Teams), Custom String("{0} Ignition Bonus: {1}", Hero Icon String(Hero(Anran)), Round To Integer(Global.BossIgnitedDamageTaken, To Nearest)), Null, Null,
+			Right, 10, Color(Team 2), Color(White), Color(White), String, Default Visibility);
 		Set Status(All Players(Team 2), Null, Invincible, 10);
 		Disable Built-In Game Mode Announcer;
 		Wait(1.800, Ignore Condition);
@@ -13642,7 +13646,7 @@ rule("CORE: (TEAM) REAP - ENERGY BUFFS")
 	actions
 	{
 		Set Damage Dealt(Event Player, 140);
-		Add Health Pool To Player(Event Player, Health, 100, False, False);
+		Add Health Pool To Player(Event Player, Health, 125, False, False);
 		Event Player.shield_pool = Last Created Health Pool;
 		Set Move Speed(Event Player, 125);
 		Set Ammo(Event Player, 0, 16);
@@ -19361,6 +19365,7 @@ rule("CORE: (TEAM) ANRAN - SPAWN")
 
 	actions
 	{
+
 		Destroy HUD Text(Event Player.charge_hud);
 		Destroy HUD Text(Event Player.team_abilityHUD[4]);
 		Destroy HUD Text(Event Player.team_abilityHUD[5]);
@@ -19373,7 +19378,8 @@ rule("CORE: (TEAM) ANRAN - SPAWN")
 		Create HUD Text(Event Player, Icon String(Fire), Custom String("IGNITED BOSS TAKES MORE DAMAGE FROM ALLIES"), Custom String(
 			"IGNITION EFFECT"), Left, 10, Color(Orange), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 		Event Player.team_abilityHUD[0] = Last Text ID;
-		Create HUD Text(Event Player, Null, Custom String("DAMAGE AMPLIFIED: {0}", Global.BossIgnitedDamageTaken), Null, Left, 10.100,
+		Skip If(Is Waiting For Players, 2);
+		Create HUD Text(Event Player, Null, Custom String(" \n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}", Round To Integer(Global.BossIgnitedDamageTaken, To Nearest)), Null, Top, 10.100,
 			Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 	}
