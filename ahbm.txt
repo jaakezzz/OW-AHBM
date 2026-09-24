@@ -1979,6 +1979,7 @@ variables
 		43: BossDamageReceived
 		44: BossResistanceStat
 		45: BossIgnitedDamageTaken
+		51: HUDPadding
 
 	player:
 		1: Third_Person
@@ -2362,7 +2363,7 @@ rule("CORE: (WAIT) WAITING MENU (ERASE)")
 		Wait(0.030, Ignore Condition);
 		Destroy HUD Text(Global.X[7]);
 		Global.X = Null;
-		Create HUD Text(All Players(Team 2), Null, Null, Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), Left, 0, Color(White), Color(
+		Create HUD Text(All Players(Team 2), Null, Null, Custom String(" \r\n\r\n\r\n\r\n\r\n\r\n\r\n"), Left, 0, Color(White), Color(
 			White), Color(White), Visible To and String, Default Visibility);
 	}
 }
@@ -5292,14 +5293,8 @@ rule("CORE: (BOSS) SOMBRA SPAWN")
 		Set Move Speed(Event Player, 100);
 		Set Damage Dealt(Event Player, 70);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
-			Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
-			"{0} {1}", Custom String("damage: "), Icon String(Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black),
-			Visible To and String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("{0}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n damage:  {1}", (Is Waiting For Players ? Custom String("   \r\n\r\n\r\n\r\n") : Custom String(" ")), Icon String(Arrow: Down)), Top, 8,
+			Color(White), Color(White), Color(Black), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 	}
 }
@@ -5329,14 +5324,8 @@ rule("CORE: (BOSS) SOMBRA - FOCUS")
 		Set Move Speed(Event Player, 70);
 		Set Damage Dealt(Event Player, 115);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
-			Arrow: Up))), Top, 8, Color(White), Color(White), Color(Purple), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
-			"{0} {1}", Custom String("damage: "), Icon String(Arrow: Up))), Top, 8, Color(White), Color(White), Color(Purple),
-			Visible To and String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("{0}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n damage:  {1}", (Is Waiting For Players ? Custom String("   \r\n\r\n\r\n\r\n") : Custom String(" ")), Icon String(Arrow: Up)), Top, 8,
+			Color(White), Color(White), Color(Purple), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Wait(0.500, Ignore Condition);
 		Global.W = True;
@@ -5368,14 +5357,8 @@ rule("CORE: (BOSS) SOMBRA - UNFOCUS")
 		Set Move Speed(Event Player, 100);
 		Set Damage Dealt(Event Player, 70);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
-			Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
-			"{0} {1}", Custom String("damage: "), Icon String(Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black),
-			Visible To and String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("{0}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n damage:  {1}", (Is Waiting For Players ? Custom String("   \r\n\r\n\r\n\r\n") : Custom String(" ")), Icon String(Arrow: Down)), Top, 8,
+			Color(White), Color(White), Color(Black), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Wait(0.100, Ignore Condition);
 		Global.W = False;
@@ -7715,16 +7698,10 @@ rule("CORE: (TEAM) ASHE - SPAWN")
 		Event Player.primary_charge = 2;
 		Event Player.secondary_charge = Color(White);
 		Event Player.timer = 10;
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			" \n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0} : {1} \r\n\r\n\r\n\r\n", Ability Icon String(Hero(
-			Ashe), Button(Ability 1)), Event Player.primary_charge), Top, 8.100, Color(White), Color(White), Event Player.secondary_charge,
-			Visible To String and Color, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0} : {1} \r\n\r\n\r\n\r\n", Ability Icon String(Hero(Ashe), Button(
-			Ability 1)), Event Player.primary_charge), Top, 8, Color(White), Color(White), Event Player.secondary_charge,
-			Visible To String and Color, Default Visibility);
+			" \n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{2} {0} : {1} \r\n\r\n\r\n\r\n", Ability Icon String(Hero(
+			Ashe), Button(Ability 1)), Event Player.primary_charge, Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Event Player.secondary_charge,
+			String and Color, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		disabled Create HUD Text(Event Player, Null, Null, Custom String(" \r\n			{0} {0} [ {1} ]", Custom String(
 			"                                                                                              "),
@@ -8488,25 +8465,20 @@ rule("CORE: (TEAM) Ana - Heal Dart Warning")
 
 	actions
 	{
-		Skip If(Healee == Event Player, 23);
+		Abort If(Healee == Event Player);
 		Event Player.Ability_Toggle = 1;
 		Destroy HUD Text(Event Player.charge_hud[0]);
 		Wait(0.033, Ignore Condition);
-		Skip If(Is Waiting For Players, 7);
 		Create HUD Text(Event Player, Null, Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nHEAL DART WARNING:"),
-			Null, Top, 8, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}HEAL DART WARNING:", Global.HUDPadding[1]),
+			Null, Top, 8, Color(White), Color(White), Color(White), String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
+		Skip If(Is Waiting For Players, 4);
 		Destroy Effect(Event Player.PlayerFX_1);
 		Wait(0.033, Ignore Condition);
 		Create Effect(Event Player, Good Aura, Color(Purple), Event Player + Vector(0, Event Player.Z[4], 0) + Facing Direction Of(
 			Event Player), 1.750, Visible To Position and Radius);
 		Event Player.PlayerFX_1 = Last Created Entity;
-		Skip(2);
-		Create HUD Text(Event Player, Null, Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nHEAL DART WARNING:"), Null, Top, 8, Color(
-			White), Color(White), Color(White), Visible To and String, Default Visibility);
-		Event Player.charge_hud[0] = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud[1]);
 		Wait(0.333, Ignore Condition);
 		Create HUD Text(Event Player, Null, Custom String("NEGLIGIBLE HEALING + LOSE ULTIMATE"), Null, Top, 8.100, Color(Sky Blue), Color(
@@ -9180,14 +9152,9 @@ rule("CORE: (TEAM) MOIRA - PRIMARY WARNING")
 	{
 		Destroy HUD Text(Event Player.charge_hud[0]);
 		Wait(0.033, Ignore Condition);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nPRIMARY HEAL WARNING:"),
-			Null, Top, 8, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nPRIMARY HEAL WARNING:"), Null, Top, 8, Color(
-			White), Color(White), Color(White), Visible To and String, Default Visibility);
+			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}PRIMARY HEAL WARNING:", Global.HUDPadding[1]), Null, Top, 8, Color(
+			White), Color(White), Color(White), String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud[1]);
 		Wait(0.333, Ignore Condition);
@@ -11439,7 +11406,7 @@ rule("CORE: (TEAM) MERCY - PHARAH MERCY BEACON OUT RANGE")
 	{
 		Destroy HUD Text(Global.MercyBeacon[7]);
 		Wait(0.016, Ignore Condition);
-		Create HUD Text(Event Player, Null, Custom String("\r\n\r\n\r\n\r\n             out of range"), Custom String(
+		Create HUD Text(Event Player, Null, Custom String(" \r\n\r\n\r\n\r\n             out of range"), Custom String(
 			"{0}  beacon active! ", Hero Icon String(Hero(Pharah))), Top, 9, Color(White), Color(Red), Color(Aqua), Visible To and String,
 			Default Visibility);
 		Global.MercyBeacon[7] = Last Text ID;
@@ -11466,7 +11433,7 @@ rule("CORE: (TEAM) MERCY - PHARAH MERCY BEACON IN RANGE")
 	{
 		Destroy HUD Text(Global.MercyBeacon[7]);
 		Wait(0.016, Ignore Condition);
-		Create HUD Text(Event Player, Null, Custom String("\r\n\r\n\r\n\r\n                  PRESS {0}", Input Binding String(Button(
+		Create HUD Text(Event Player, Null, Custom String(" \r\n\r\n\r\n\r\n                  PRESS {0}", Input Binding String(Button(
 			Interact))), Custom String("{0}  beacon active! ", Hero Icon String(Hero(Pharah))), Top, 9, Color(White), Color(White), Color(
 			Aqua), Visible To and String, Default Visibility);
 		Global.MercyBeacon[7] = Last Text ID;
@@ -13198,14 +13165,9 @@ rule("CORE: (BOSS) GENJI - 2ND CD MID READY")
 	actions
 	{
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Ability Icon String(Hero(
-			Genji), Button(Secondary Fire))), Top, 8, Color(White), Color(White), Color(Green), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Ability Icon String(Hero(Genji), Button(
-			Secondary Fire))), Top, 8, Color(White), Color(White), Color(Green), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Ability Icon String(Hero(
+			Genji), Button(Secondary Fire)), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Green), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 	}
 }
@@ -13227,14 +13189,8 @@ rule("CORE: (BOSS) GENJI - 2ND CD MID COUNT")
 	actions
 	{
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                         {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Green), Visible To and String,
-			Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                         {0}", Round To Integer(Event Player.primary_charge,
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}                         {1}", Global.HUDPadding[0], Round To Integer(Event Player.primary_charge,
 			Up)), Top, 8, Color(White), Color(White), Color(Green), Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 	}
@@ -13280,15 +13236,9 @@ rule("CORE: (BOSS) ASHE - HIP AMMO MID")
 	actions
 	{
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                                        {0} | {1}",
-			Ammo(Event Player, 0), Event Player.secondary_charge), Top, 8, Color(White), Color(White), Color(Rose), Visible To and String,
-			Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                                         {0} | {1}", Ammo(
-			Event Player, 0), Event Player.secondary_charge), Top, 8, Color(White), Color(White), Color(Rose), Visible To and String,
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{2}                                         {0} | {1}", Ammo(
+			Event Player, 0), Event Player.secondary_charge, Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Rose), String,
 			Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 	}
@@ -13313,13 +13263,8 @@ rule("CORE: (BOSS) ASHE - SCOPE AMMO MID")
 		Destroy HUD Text(Event Player.charge_hud);
 		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                                        {0} | {1}",
-			Ammo(Event Player, 0), Event Player.primary_charge), Top, 8, Color(White), Color(White), Color(Rose), Visible To and String,
-			Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                                         {0} | {1}", Ammo(
-			Event Player, 0), Event Player.primary_charge), Top, 8, Color(White), Color(White), Color(Rose), Visible To and String,
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{2}                                         {0} | {1}", Ammo(
+			Event Player, 0), Event Player.primary_charge, Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Rose), Visible To and String,
 			Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 	}
@@ -14559,15 +14504,9 @@ rule("CORE: (TEAM) CASS - USE MEDS")
 		Event Player.X = Last Created Entity;
 		Destroy HUD Text(Event Player.charge_hud);
 		Wait(0.016, Ignore Condition);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Yellow), Visible To and String,
-			Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Yellow), Visible To and String,
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Round To Integer(
+			Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Yellow), String,
 			Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
@@ -15028,14 +14967,9 @@ rule("CORE: (BOSS) ECHO - SPAWN")
 		Event Player.Ability_Bool = False;
 		Event Player.Ability_Toggle = True;
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8,
-			Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8, Color(White),
-			Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Icon String(Bolt), Global.HUDPadding[0]), Top, 8, Color(White),
+			Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Event Player.primary_charge = 0;
 	}
@@ -15174,14 +15108,9 @@ rule("CORE: (BOSS) ECHO - P.C. HIT Y")
 			"CHARGE BOMB"), Left, 1, Color(Orange), Color(Orange), Color(Sky Blue), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Round To Integer(
+			Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Chase Player Variable At Rate(Event Player, primary_charge, 0, 1, Destination and Rate);
 		Wait(20, Ignore Condition);
@@ -15195,14 +15124,9 @@ rule("CORE: (BOSS) ECHO - P.C. HIT Y")
 		Event Player.secondary_charge = 1;
 		Play Effect(Event Player, Buff Impact Sound, Color(White), Event Player, 25);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8,
-			Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8, Color(White),
-			Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Icon String(Bolt), Global.HUDPadding[0]), Top, 8, Color(White),
+			Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Event Player.Ability_Toggle = True;
 		Event Player.primary_charge = 0;
@@ -15259,14 +15183,9 @@ rule("CORE: (BOSS) ECHO - P.C. HIT XZ")
 			"CHARGE BOMB"), Left, 1, Color(Orange), Color(Orange), Color(Sky Blue), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Round To Integer(
+			Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Chase Player Variable At Rate(Event Player, primary_charge, 0, 1, Destination and Rate);
 		Wait(20, Ignore Condition);
@@ -15280,13 +15199,8 @@ rule("CORE: (BOSS) ECHO - P.C. HIT XZ")
 		Event Player.secondary_charge = 1;
 		Play Effect(Event Player, Buff Impact Sound, Color(White), Event Player, 25);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8,
-			Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8, Color(White),
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Icon String(Bolt), Global.HUDPadding[0]), Top, 8, Color(White),
 			Color(White), Color(Aqua), Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Event Player.Ability_Toggle = True;
@@ -15342,14 +15256,9 @@ rule("CORE: (BOSS) ECHO - P.C. OUT OF RANGE")
 			"CHARGE BOMB"), Left, 1, Color(Orange), Color(Orange), Color(Sky Blue), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Round To Integer(
+			Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Chase Player Variable At Rate(Event Player, primary_charge, 0, 1, Destination and Rate);
 		Wait(20, Ignore Condition);
@@ -15363,13 +15272,8 @@ rule("CORE: (BOSS) ECHO - P.C. OUT OF RANGE")
 		Event Player.secondary_charge = 1;
 		Play Effect(Event Player, Buff Impact Sound, Color(White), Event Player, 25);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8,
-			Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8, Color(White),
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Icon String(Bolt), Global.HUDPadding[0]), Top, 8, Color(White),
 			Color(White), Color(Aqua), Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Event Player.Ability_Toggle = True;
@@ -15407,14 +15311,9 @@ rule("CORE: (BOSS) ECHO - P.C. DEAD")
 			"CHARGE BOMB"), Left, 1, Color(Orange), Color(Orange), Color(Sky Blue), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Round To Integer(
+			Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Chase Player Variable At Rate(Event Player, primary_charge, 0, 1, Destination and Rate);
 		Wait(20, Ignore Condition);
@@ -15428,13 +15327,8 @@ rule("CORE: (BOSS) ECHO - P.C. DEAD")
 		Global.BOSS_AbilityKey = Last Text ID;
 		Event Player.secondary_charge = 1;
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8,
-			Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8, Color(White),
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Icon String(Bolt), Global.HUDPadding[0]), Top, 8, Color(White),
 			Color(White), Color(Aqua), Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Event Player.Ability_Toggle = True;
@@ -15473,14 +15367,9 @@ rule("CORE: (BOSS) ECHO - P.C. DUPE")
 			"CHARGE BOMB"), Left, 1, Color(Orange), Color(Orange), Color(Sky Blue), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Round To Integer(
+			Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Chase Player Variable At Rate(Event Player, primary_charge, 0, 1, Destination and Rate);
 		Wait(20, Ignore Condition);
@@ -15867,14 +15756,9 @@ rule("CORE: (TEAM) LW - HEAL WARNING")
 	{
 		Destroy HUD Text(Event Player.charge_hud[0]);
 		Wait(0.033, Ignore Condition);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nHEAL BLOSSOM WARNING:"),
-			Null, Top, 8, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nHEAL BLOSSOM WARNING:"), Null, Top, 8, Color(
-			White), Color(White), Color(White), Visible To and String, Default Visibility);
+			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}HEAL BLOSSOM WARNING:", Global.HUDPadding[1]), Null, Top, 8, Color(
+			White), Color(White), Color(White), String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud[1]);
 		Wait(0.333, Ignore Condition);
@@ -16223,13 +16107,8 @@ rule("CORE: (TEAM) BAP - HEAL CHARGE HUD ON")
 		Destroy HUD Text(Event Player.charge_hud[0]);
 		Destroy HUD Text(Event Player.charge_hud[2]);
 		Destroy Progress Bar HUD Text(Event Player.charge_hud[1]);
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Null, Custom String(" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}",
-			Round To Integer(Event Player.secondary_charge, Up)), Top, 8, Color(White), Color(Yellow), Color(Yellow),
-			Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}", Round To Integer(
-			Event Player.secondary_charge, Up)), Top, 8, Color(White), Color(Yellow), Color(Yellow), Visible To and String,
+		Create HUD Text(Event Player, Null, Null, Custom String(" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}{0}", Round To Integer(
+			Event Player.secondary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(Yellow), Color(Yellow), String,
 			Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Create HUD Text(Event Player, Null, Custom String(" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nHEAL CHARGE LOCK:"), Null, Top, 8.100, Color(
@@ -16480,18 +16359,11 @@ rule("CORE: (TEAM) PHARAH - TAG AIM")
 	{
 		Destroy HUD Text(Event Player.charge_hud);
 		Destroy HUD Text(Event Player.charge_hud[0]);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0} + {1}                                                                                     ",
-			Input Binding String(Button(Interact)), Input Binding String(Button(Jump))), Custom String(
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{2} {0} + {1}                                                                                        ",
+			Input Binding String(Button(Interact)), Input Binding String(Button(Jump)), Global.HUDPadding[0]), Custom String(
 			" TAG BOSS                                                              "), Top, 8, Color(White), Color(White), Color(
-			Turquoise), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0} + {1}                                                                                        ",
-			Input Binding String(Button(Interact)), Input Binding String(Button(Jump))), Custom String(
-			" TAG BOSS                                                              "), Top, 8, Color(White), Color(White), Color(
-			Turquoise), Visible To and String, Default Visibility);
+			Turquoise), String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Destroy Effect(Event Player.charge_hud[1]);
 		Create Effect(Event Player, Ring, Color(Turquoise), All Players(Team 1), 0.750, Visible To Position and Radius);
@@ -16545,14 +16417,9 @@ rule("CORE: (TEAM) PHARAH - TAG BOSS")
 		Event Player.timer = 20;
 		Destroy HUD Text(Global.BOSS_StatusArray[1]);
 		Destroy HUD Text(Event Player.charge_hud[0]);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0}                              ", Round To Integer(
-			Event Player.timer, Up)), Top, 8, Color(White), Color(White), Color(Turquoise), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0}                              ", Round To Integer(Event Player.timer, Up)),
-			Top, 8, Color(White), Color(White), Color(Turquoise), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1} {0}                              ", Round To Integer(Event Player.timer, Up), Global.HUDPadding[0]),
+			Top, 8, Color(White), Color(White), Color(Turquoise), String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Wait Until(Event Player.timer == 0, 20.250);
 		Destroy HUD Text(Event Player.charge_hud[0]);
@@ -16561,18 +16428,11 @@ rule("CORE: (TEAM) PHARAH - TAG BOSS")
 		Skip If(!Is In Line of Sight(Eye Position(Event Player), All Players(Team 1), Barriers Do Not Block LOS)
 			 || !Is In View Angle(Event Player, All Players(Team 1), Event Player.Aim[1]), 11);
 		Destroy HUD Text(Event Player.charge_hud[0]);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0} + {1}                                                                                     ",
-			Input Binding String(Button(Interact)), Input Binding String(Button(Jump))), Custom String(
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{2} {0} + {1}                                                                                        ",
+			Input Binding String(Button(Interact)), Input Binding String(Button(Jump)), Global.HUDPadding[0]), Custom String(
 			" TAG BOSS                                                              "), Top, 8, Color(White), Color(White), Color(
-			Turquoise), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n {0} + {1}                                                                                        ",
-			Input Binding String(Button(Interact)), Input Binding String(Button(Jump))), Custom String(
-			" TAG BOSS                                                              "), Top, 8, Color(White), Color(White), Color(
-			Turquoise), Visible To and String, Default Visibility);
+			Turquoise), String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Wait(0.025, Ignore Condition);
 		Event Player.Aim[0] = True;
@@ -16718,18 +16578,11 @@ rule("CORE: (TEAM) BRIG - ARMOUR AIM")
 	{
 		Destroy HUD Text(Event Player.charge_hud);
 		Destroy HUD Text(Event Player.charge_hud[0]);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n PRESS {0}                                                                                     ",
-			Input Binding String(Button(Reload))), Custom String(
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1} PRESS {0}                                                                                        ",
+			Input Binding String(Button(Reload)), Global.HUDPadding[0]), Custom String(
 			" MERCY ARMOUR                                                              "), Top, 8, Color(White), Color(White), Color(
-			Yellow), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n PRESS {0}                                                                                        ",
-			Input Binding String(Button(Reload))), Custom String(
-			" MERCY ARMOUR                                                              "), Top, 8, Color(White), Color(White), Color(
-			Yellow), Visible To and String, Default Visibility);
+			Yellow), String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Destroy Effect(Event Player.charge_hud[1]);
 		Create Effect(Event Player, Good Aura, Color(Orange), Players On Hero(Hero(Mercy), Team 2), 1, Visible To Position and Radius);
@@ -17242,25 +17095,15 @@ rule("CORE: (BOSS) ECHO DUPE: REMOVE CHARGE BOMB")
 			Color(White), Color(Sky Blue), Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Wait Until(!Is Duplicating(Event Player), 17);
-		Skip If(Event Player.primary_charge == 0, 6);
-		Skip If(Is Waiting For Players, 2);
+		Skip If(Event Player.primary_charge == 0, 3);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Round To Integer(
-			Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Round To Integer(
+			Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
-		Skip(12);
-		Skip If(Is Waiting For Players, 2);
+		Skip(9);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8,
-			Color(White), Color(White), Color(Aqua), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                              {0}", Icon String(Bolt)), Top, 8, Color(White),
-			Color(White), Color(Aqua), Visible To and String, Default Visibility);
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{1}                              {0}", Icon String(Bolt), Global.HUDPadding[0]), Top, 8, Color(White),
+			Color(White), Color(Aqua), String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Destroy HUD Text(Global.BOSS_AbilityKey);
 		Wait(0.016, Ignore Condition);
@@ -18672,13 +18515,8 @@ rule("CORE: (BOSS) RAM CHARGE JUMP")
 			Visible To and String, Default Visibility);
 		Global.BOSS_AbilityKey = Last Text ID;
 		Destroy HUD Text(Event Player.charge_hud[0]);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Custom String(
-			" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"),
-			Null, Top, 8, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Custom String(
-			" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), Null, Top, 8, Color(
+			" \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}", Global.HUDPadding[1]), Null, Top, 8, Color(
 			White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Event Player.charge_hud[0] = Last Text ID;
 		Destroy Progress Bar HUD Text(Event Player.charge_hud[1]);
@@ -19472,15 +19310,9 @@ rule("CORE: (TEAM) VENDETTA ULT")
 		Chase Player Variable At Rate(Event Player, primary_charge, 0, 1, Destination and Rate);
 		Destroy HUD Text(Event Player.team_abilityHUD[0]);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
 		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                         {0} {1}", Ability Icon String(Hero(
-			Vendetta), Button(Ultimate)), Round To Integer(Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(
-			White), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                         {0} {1}", Ability Icon String(Hero(Vendetta), Button(
-			Ultimate)), Round To Integer(Event Player.primary_charge, Up)), Top, 8, Color(White), Color(White), Color(White),
+			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{2}                         {0} {1}", Ability Icon String(Hero(Vendetta), Button(
+			Ultimate)), Round To Integer(Event Player.primary_charge, Up), Global.HUDPadding[0]), Top, 8, Color(White), Color(White), Color(White),
 			Visible To and String, Default Visibility);
 		Event Player.charge_hud = Last Text ID;
 		Create HUD Text(Event Player, Ability Icon String(Hero(Vendetta), Button(Ultimate)), Custom String(
@@ -19967,3 +19799,19 @@ rule("CORE: (BOSS) THAW RESET")
 	}
 }
 
+rule("HUD PADDING MANAGER")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+	
+	actions
+	{
+		Global.HUDPadding = Array(Custom String("\r\n\r\n\r\n\r\n"), Custom String("\r\n\r\n\r\n\r\n\r\n"));
+		Skip If(!Is Waiting For Players, 1);
+		Global.HUDPadding = Mapped Array(Global.HUDPadding, Empty Array);
+		Wait Until((Is Waiting For Players ? Empty Array : True) != Global.HUDPadding[0], 999999);
+		Loop;
+	}
+}
