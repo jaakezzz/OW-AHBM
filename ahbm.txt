@@ -357,7 +357,7 @@ settings
 
 			Hazard
 			{
-				Ammunition Clip Size Scalar: 50%
+				Ammunition Clip Size Scalar: 37.5%
 				Damage Dealt: 190%
 				Healing Received: 25%
 				Health: 200%
@@ -1088,7 +1088,7 @@ settings
 				Coach Gun Knockback Scalar Enemy: 25%
 				Coach Gun Knockback Scalar Self: 75%
 				Damage Dealt: 67%
-				Dynamite Cooldown Time: 125%
+				Dynamite Cooldown Time: 100%
 				Passive Health Regeneration: On
 				Role Passives: Off
 				Ultimate Duration: 70%
@@ -2023,6 +2023,7 @@ variables
 		59: LastDamageNumberInstance
 		60: LastDamageNumberTime
 		61: FireStrike
+		62: BurnStatus
 }
 
 subroutines
@@ -2034,6 +2035,9 @@ subroutines
 	4: BOSSNoAbility_Hud
 	6: BossFrozenNotification
 	7: BossClearFreeze
+	8: ReceiveBurnDamage
+	9: DealBurnDamage
+	10: ClearBurnDamage
 }
 
 rule("CORE: (TIMER) SET START TIME")
@@ -3378,6 +3382,7 @@ rule("CORE: (TEAM) ALL - GENERAL SWITCH")
 	actions
 	{
 		Event Player.current_hero = Hero Of(Event Player);
+		Event Player.BurnStatus[0] = Null;
 		If(Team Of(Event Player) == Team 2);
 			Stop Holding Button(Event Player, Button(Crouch));
 			Set Damage Dealt(Event Player, 100);
@@ -5759,212 +5764,6 @@ rule("CORE: (BOSS) HOG - ULTIMATE FROZEN")
 	}
 }
 
-rule("CORE: (BOSS) HOG - FIRE DMG SET")
-{
-	event
-	{
-		Player Took Damage;
-		Team 2;
-		All;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Is Using Ultimate(Players On Hero(Hero(Roadhog), Team 1)) == True;
-	}
-
-	actions
-	{
-		Event Player.Z[2] = True;
-		Set Status(Event Player, All Players(Team 1), Burning, 3);
-		Event Player.Z[1] = 3;
-		Wait(1, Ignore Condition);
-		Abort If(!Event Player.Z[2]);
-		Event Player.Z[1] -= 1;
-		Wait(1, Ignore Condition);
-		Abort If(!Event Player.Z[2]);
-		Event Player.Z[1] -= 1;
-		Wait(1, Ignore Condition);
-		Abort If(!Event Player.Z[2]);
-		Event Player.Z[1] -= 1;
-		Skip If(Event Player.Z[1] != 0, 2);
-		Event Player.Z[2] = False;
-		Clear Status(Event Player, Burning);
-	}
-}
-
-rule("CORE: (BOSS) HOG - FIRE DMG LOOP")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 2;
-		All;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Event Player.Z[2] == True;
-	}
-
-	actions
-	{
-		Damage(Event Player, Players On Hero(Hero(Roadhog), Team 1), 1);
-		Wait(0.100, Ignore Condition);
-		Loop If Condition Is True;
-	}
-}
-
-rule("CORE: (BOSS) HOG - FIRE ABILITY 1 CLEAN")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 2;
-		All;
-	}
-
-	conditions
-	{
-		(Event Player == Players On Hero(Hero(Mei), Team 2) || Event Player == Players On Hero(Hero(Moira), Team 2)
-			|| Event Player == Players On Hero(Hero(Reaper), Team 2) || Event Player == Players On Hero(Hero(Zarya), Team 2)) == True;
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Event Player.Z[2] == True;
-		Is Using Ability 1(Event Player) == True;
-	}
-
-	actions
-	{
-		Event Player.Z[2] = False;
-		Clear Status(Event Player, Burning);
-		Event Player.Z[1] = 3;
-	}
-}
-
-rule("CORE: (BOSS) HOG - FIRE RECALL CLEAN")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 2;
-		Tracer;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Event Player.Z[2] == True;
-		Is Using Ability 2(Event Player) == True;
-	}
-
-	actions
-	{
-		Event Player.Z[2] = False;
-		Clear Status(Event Player, Burning);
-		Event Player.Z[1] = 3;
-	}
-}
-
-rule("CORE: (BOSS) HOG - FIRE TRANSLOCATE CLEAN")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 2;
-		Sombra;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Event Player.Z[2] == True;
-		Is Using Ability 2(Event Player) == True;
-	}
-
-	actions
-	{
-		Wait(0.700, Abort When False);
-		Skip If(!Is Button Held(Event Player, Button(Ability 2)), 3);
-		Event Player.Z[2] = False;
-		Clear Status(Event Player, Burning);
-		Event Player.Z[1] = 3;
-	}
-}
-
-rule("CORE: (BOSS) HOG - FIRE PROJ BUBBLE CLEAN")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 2;
-		Zarya;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Player Closest To Reticle(Event Player, Team 2).Z[2] == True;
-		Is Using Ability 2(Event Player) == True;
-	}
-
-	actions
-	{
-		Player Closest To Reticle(Event Player, Team 2).Z[2] = False;
-		Clear Status(Player Closest To Reticle(Event Player, Team 2), Burning);
-		Player Closest To Reticle(Event Player, Team 2).Z[1] = 3;
-	}
-}
-
-rule("CORE: (BOSS) HOG - FIRE DEATH CLEAN")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 2;
-		All;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Event Player.Z[2] == True;
-		Is Dead(Event Player) == True;
-	}
-
-	actions
-	{
-		Event Player.Z[2] = False;
-		Clear Status(Event Player, Burning);
-		Event Player.Z[1] = 3;
-	}
-}
-
-rule("CORE: (BOSS) HOG - FIRE SUZU CLEAN")
-{
-	event
-	{
-		Player Received Healing;
-		Team 2;
-		All;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Event Player.Z[2] == True;
-		(Hero Of(Healer) == Hero(Kiriko) && Event Ability == Button(Ability 2)) == True;
-	}
-
-	actions
-	{
-		Event Player.Z[2] = False;
-		Clear Status(Event Player, Burning);
-		Event Player.Z[1] = 3;
-	}
-}
-
 rule("CORE: (BOSS) HOG - ULT CHARGE DMG")
 {
 	event
@@ -5984,6 +5783,233 @@ rule("CORE: (BOSS) HOG - ULT CHARGE DMG")
 	{
 		Skip If(Hero Of(Victim) == Hero(Wrecking Ball) && Is Using Ability 2(Players On Hero(Hero(Wrecking Ball), Team 2)), 1);
 		Set Ultimate Charge(Event Player, Ultimate Charge Percent(Event Player) + Event Damage * 0.100);
+	}
+}
+
+rule("CORE: (BOSS) HOG - FIRE DMG SET")
+{
+	event
+	{
+		Player Took Damage;
+		Team 2;
+		All;
+	}
+
+	conditions
+	{
+		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
+		Is Using Ultimate(Players On Hero(Hero(Roadhog), Team 1)) == True;
+	}
+
+	actions
+	{
+		Event Player.BurnStatus[1] = 3;
+		Event Player.BurnStatus[2] = 10;
+		Call Subroutine(ReceiveBurnDamage);
+	}
+}
+
+rule("CORE: (ALL) RECEIVE BURN DAMAGE")
+{
+	event
+	{
+		Subroutine;
+		ReceiveBurnDamage;
+	}
+
+	actions
+	{
+		Set Status(Event Player, Attacker, Burning, Event Player.BurnStatus[1]);
+		Stop Damage Over Time(Event Player.BurnStatus[0]);
+		Start Damage Over Time(Event Player, Attacker, Event Player.BurnStatus[1], Event Player.BurnStatus[2]);
+		Event Player.BurnStatus[0] = Last Damage Over Time ID;
+	}
+}
+
+rule("CORE: (ALL) DEAL BURN DAMAGE")
+{
+	event
+	{
+		Subroutine;
+		DealBurnDamage;
+	}
+
+	actions
+	{
+		Set Status(Victim, Event Player, Burning, Victim.BurnStatus[1]);
+		Stop Damage Over Time(Victim.BurnStatus[0]);
+		Start Damage Over Time(Victim, Event Player, Victim.BurnStatus[1], Victim.BurnStatus[2]);
+		Victim.BurnStatus[0] = Last Damage Over Time ID;
+	}
+}
+
+rule("CORE: (ALL) CLEAR BURN DAMAGE")
+{
+	event
+	{
+		Subroutine;
+		ClearBurnDamage;
+	}
+
+	actions
+	{
+		Stop Damage Over Time(Event Player.BurnStatus[0]);
+		Clear Status(Event Player, Burning);
+		Event Player.BurnStatus[0] = Null;
+	}
+}
+
+rule("CORE: (ALL) FIRE ABILITY 1 CLEAN")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Array Contains(Array(Hero(Mei), Hero(Moira), Hero(Reaper), Hero(Zarya)), Hero Of(Event Player)) == True;
+		Event Player.BurnStatus[0] != Null;
+		Is Using Ability 1(Event Player) == True;
+	}
+
+	actions
+	{
+		Call Subroutine(ClearBurnDamage);
+	}
+}
+
+rule("CORE: (ALL) FIRE TRACER RECALL CLEAN")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Tracer;
+	}
+
+	conditions
+	{
+		Event Player.BurnStatus[0] != Null;
+		Is Using Ability 2(Event Player) == True;
+	}
+
+	actions
+	{
+		Call Subroutine(ClearBurnDamage);
+	}
+}
+
+rule("CORE: (ALL) FIRE SOMBRA TRANSLOCATE CLEAN")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Sombra;
+	}
+
+	conditions
+	{
+		Event Player.BurnStatus[0] != Null;
+		Is Using Ability 2(Event Player) == True;
+	}
+
+	actions
+	{
+		Wait(0.700, Abort When False);
+		Skip If(!Is Button Held(Event Player, Button(Ability 2)), 3);
+		Call Subroutine(ClearBurnDamage);
+	}
+}
+
+rule("CORE: (TEAM) FIRE ZARYA PROJ BUBBLE CLEAN")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 2;
+		Zarya;
+	}
+
+	conditions
+	{
+		Is Using Ability 2(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.Aim = Player Closest To Reticle(Event Player, Team 2);
+		If(Event Player.Aim.BurnStatus[0] != Null);
+			Stop Damage Over Time(Event Player.Aim.BurnStatus[0]);
+			Clear Status(Event Player.Aim, Burning);
+			Event Player.Aim.BurnStatus[0] = Null;
+		End;
+	}
+}
+
+rule("CORE: (ALL) FIRE DEATH CLEAN")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dead(Event Player) == True;
+		Event Player.BurnStatus[0] != Null;
+	}
+
+	actions
+	{
+		Call Subroutine(ClearBurnDamage);
+	}
+}
+
+rule("CORE: (ALL) FIRE SUZU/GRIP CLEAN")
+{
+	event
+	{
+		Player Received Healing;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.BurnStatus[0] != Null;
+		((Hero Of(Healer) == Hero(Kiriko) || Hero Of(Healer) == Hero(Lifeweaver)) && Event Ability == Button(Ability 2)) == True;
+	}
+
+	actions
+	{
+		Call Subroutine(ClearBurnDamage);
+	}
+}
+
+rule("CORE: (ALL) FIRE HP PACK CLEAN")
+{
+	event
+	{
+		Player Received Healing;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.BurnStatus[0] != Null;
+		Event Was Health Pack == True;
+	}
+
+	actions
+	{
+		Call Subroutine(ClearBurnDamage);
 	}
 }
 
@@ -7252,11 +7278,10 @@ rule("ROLES: (TIMER) START MATCH TIME")
 	actions
 	{
 		Wait(0.001, Ignore Condition);
-		Skip If(Is True For Any(All Players(All Teams), Has Spawned(Current Array Element) == False), 6);
+		Skip If(Is True For Any(All Players(All Teams), Has Spawned(Current Array Element) == False), 5);
 		Skip If(Global.A[0], 1);
 		Big Message(All Players(All Teams), Custom String("3... 2... 1..."));
-		disabled Clear Status(All Players(All Teams), Phased Out);
-		disabled Set Invisible(All Players(All Teams), None);
+		All Players(All Teams).BurnStatus[0] = Null;
 		Global.A[0] = True;
 		Wait(4, Ignore Condition);
 		Unpause Match Time;
@@ -10410,30 +10435,6 @@ rule("CORE: (BOSS) ANRAN - NO REVIVE ULT")
 	}
 }
 
-rule("CORE: (BOSS) HOG - FIRE HP PACK CLEAN")
-{
-	event
-	{
-		Player Received Healing;
-		Team 2;
-		All;
-	}
-
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Event Player.Z[2] == True;
-		Event Was Health Pack == True;
-	}
-
-	actions
-	{
-		Event Player.Z[2] = False;
-		Clear Status(Event Player, Burning);
-		Event Player.Z[1] = 3;
-	}
-}
-
 rule("CORE: (BOSS) JUNK - WAITING SPAWN HUD")
 {
 	event
@@ -11140,7 +11141,7 @@ rule("CORE: (BOSS) TORB - ULTIMATE THAW DEATH")
 
 	actions
 	{
-    Call Subroutine(BossClearFreeze);
+    	Call Subroutine(BossClearFreeze);
 		Call Subroutine(BOSSNoAbility_Hud);
 		Set Ultimate Ability Enabled(Event Player, True);
 	}
@@ -19729,25 +19730,47 @@ rule("CORE: (BOSS) D.MON ULT CHARGE")
 	}
 }
 
-
-
-rule("temp bug fix - hazard ammo")
+rule("CORE: (TEAM) ILLARI HS BURN")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		Hazard;
+		Player Dealt Damage;
+		Team 2;
+		Illari;
+	}
+
+	conditions
+	{
+		Event Was Critical Hit == True;
 	}
 
 	actions
 	{
-		Skip If(Team Of(Event Player) == Team 1, 3);
-		Set Ammo(Event Player, 0, 6);
-		Set Max Ammo(Event Player, 0, 6);
-		Abort;
-		Set Ammo(Event Player, 0, 3);
-		Set Max Ammo(Event Player, 0, 3);
+		Victim.BurnStatus[1] = 0.75;
+		Victim.BurnStatus[2] = 16.667;
+		Call Subroutine(DealBurnDamage);
+	}
+}
+
+rule("CORE: (TEAM) REIN FS BURN")
+{
+	event
+	{
+		Player Dealt Damage;
+		Team 2;
+		Reinhardt;
+	}
+
+	conditions
+	{
+		Event Ability == Button(Ability 2);
+	}
+
+	actions
+	{
+		Victim.BurnStatus[1] = 2.5;
+		Victim.BurnStatus[2] = 20;
+		Call Subroutine(DealBurnDamage);
 	}
 }
 
