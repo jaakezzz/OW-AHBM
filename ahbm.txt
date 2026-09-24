@@ -5854,6 +5854,9 @@ rule("CORE: (ALL) CLEAR BURN DAMAGE")
 	actions
 	{
 		Stop Damage Over Time(Event Player.BurnStatus[0]);
+		Skip If(Team Of(Event Player) == Team 1 && Is Waiting For Players == False && ((Hero Of(Event Player) == Hero(Junkrat) && Is Portrait On Fire(Event Player)) ||
+			(Hero Of(Event Player) == Hero(Reinhardt) && Event Player.primary_charge > 0 && Global.BossFrozen[0] != -1) ||
+			(Hero Of(Event Player) == Hero(Roadhog) && (Ultimate Charge Percent(Event Player) == 100 || Is Using Ultimate(Event Player)))), 1);
 		Clear Status(Event Player, Burning);
 		Event Player.BurnStatus[0] = Null;
 	}
