@@ -5920,7 +5920,6 @@ rule("CORE: (ALL) FIRE SOMBRA TRANSLOCATE CLEAN")
 	actions
 	{
 		Wait(0.700, Abort When False);
-		Skip If(!Is Button Held(Event Player, Button(Ability 2)), 3);
 		Call Subroutine(ClearBurnDamage);
 	}
 }
