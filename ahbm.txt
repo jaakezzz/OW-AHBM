@@ -2024,6 +2024,7 @@ variables
 		60: LastDamageNumberTime
 		61: FireStrike
 		62: BurnStatus
+		63: BurnTimer
 }
 
 subroutines
@@ -3382,7 +3383,7 @@ rule("CORE: (TEAM) ALL - GENERAL SWITCH")
 	actions
 	{
 		Event Player.current_hero = Hero Of(Event Player);
-		Event Player.BurnStatus[0] = Null;
+		Chase Player Variable At Rate(Event Player, BurnTimer, 0, 1, Destination and Rate);
 		If(Team Of(Event Player) == Team 2);
 			Stop Holding Button(Event Player, Button(Crouch));
 			Set Damage Dealt(Event Player, 100);
@@ -5788,25 +5789,25 @@ rule("CORE: (BOSS) HOG - ULT CHARGE DMG")
 
 rule("CORE: (BOSS) HOG - FIRE DMG SET")
 {
-	event
-	{
-		Player Took Damage;
-		Team 2;
-		All;
-	}
+    event
+    {
+        Player Took Damage;
+        Team 2;
+        All;
+    }
 
-	conditions
-	{
-		Is Hero Being Played(Hero(Roadhog), Team 1) == True;
-		Is Using Ultimate(Players On Hero(Hero(Roadhog), Team 1)) == True;
-	}
+    conditions
+    {
+        Is Hero Being Played(Hero(Roadhog), Team 1) == True;
+        Is Using Ultimate(Players On Hero(Hero(Roadhog), Team 1)) == True;
+    }
 
-	actions
-	{
-		Event Player.BurnStatus[1] = 3;
-		Event Player.BurnStatus[2] = 10;
-		Call Subroutine(ReceiveBurnDamage);
-	}
+    actions
+    {
+        Event Player.BurnStatus[1] = Max(3, Event Player.BurnTimer);
+        Event Player.BurnStatus[2] = Max(10, Event Player.BurnStatus[2]);       
+        Call Subroutine(ReceiveBurnDamage);
+    }
 }
 
 rule("CORE: (ALL) RECEIVE BURN DAMAGE")
@@ -5819,7 +5820,11 @@ rule("CORE: (ALL) RECEIVE BURN DAMAGE")
 
 	actions
 	{
+		Skip If(Team Of(Event Player) == Team 1 && Is Waiting For Players == False && ((Hero Of(Event Player) == Hero(Junkrat) && Is Portrait On Fire(Event Player)) ||
+			(Hero Of(Event Player) == Hero(Reinhardt) && Event Player.primary_charge > 0 && Global.BossFrozen[0] != -1) ||
+			(Hero Of(Event Player) == Hero(Roadhog) && (Ultimate Charge Percent(Event Player) == 100 || Is Using Ultimate(Event Player)))), 1);
 		Set Status(Event Player, Attacker, Burning, Event Player.BurnStatus[1]);
+		Event Player.BurnTimer = Event Player.BurnStatus[1];
 		Stop Damage Over Time(Event Player.BurnStatus[0]);
 		Start Damage Over Time(Event Player, Attacker, Event Player.BurnStatus[1], Event Player.BurnStatus[2]);
 		Event Player.BurnStatus[0] = Last Damage Over Time ID;
@@ -5836,7 +5841,11 @@ rule("CORE: (ALL) DEAL BURN DAMAGE")
 
 	actions
 	{
+		Skip If(Team Of(Victim) == Team 1 && Is Waiting For Players == False && ((Hero Of(Victim) == Hero(Junkrat) && Is Portrait On Fire(Victim)) ||
+			(Hero Of(Victim) == Hero(Reinhardt) && Victim.primary_charge > 0 && Global.BossFrozen[0] != -1) ||
+			(Hero Of(Victim) == Hero(Roadhog) && (Ultimate Charge Percent(Victim) == 100 || Is Using Ultimate(Victim)))), 1);
 		Set Status(Victim, Event Player, Burning, Victim.BurnStatus[1]);
+		Victim.BurnTimer = Victim.BurnStatus[1];
 		Stop Damage Over Time(Victim.BurnStatus[0]);
 		Start Damage Over Time(Victim, Event Player, Victim.BurnStatus[1], Victim.BurnStatus[2]);
 		Victim.BurnStatus[0] = Last Damage Over Time ID;
@@ -5858,7 +5867,30 @@ rule("CORE: (ALL) CLEAR BURN DAMAGE")
 			(Hero Of(Event Player) == Hero(Reinhardt) && Event Player.primary_charge > 0 && Global.BossFrozen[0] != -1) ||
 			(Hero Of(Event Player) == Hero(Roadhog) && (Ultimate Charge Percent(Event Player) == 100 || Is Using Ultimate(Event Player)))), 1);
 		Clear Status(Event Player, Burning);
-		Event Player.BurnStatus[0] = Null;
+		Event Player.BurnTimer = 0;
+		Event Player.BurnStatus[1] = 0;
+		Event Player.BurnStatus[2] = 0;
+	}
+}
+
+rule("CORE: (ALL) FIRE RESET")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Status(Event Player, Burning) == False;
+	}
+
+	actions
+	{
+		Call Subroutine(ClearBurnDamage);
+		Chase Player Variable At Rate(Event Player, BurnTimer, 0, 1, Destination and Rate);
 	}
 }
 
@@ -5874,7 +5906,6 @@ rule("CORE: (ALL) FIRE ABILITY 1 CLEAN")
 	conditions
 	{
 		Array Contains(Array(Hero(Mei), Hero(Moira), Hero(Reaper), Hero(Zarya)), Hero Of(Event Player)) == True;
-		Event Player.BurnStatus[0] != Null;
 		Is Using Ability 1(Event Player) == True;
 	}
 
@@ -5895,7 +5926,6 @@ rule("CORE: (ALL) FIRE TRACER RECALL CLEAN")
 
 	conditions
 	{
-		Event Player.BurnStatus[0] != Null;
 		Is Using Ability 2(Event Player) == True;
 	}
 
@@ -5916,7 +5946,6 @@ rule("CORE: (ALL) FIRE SOMBRA TRANSLOCATE CLEAN")
 
 	conditions
 	{
-		Event Player.BurnStatus[0] != Null;
 		Is Using Ability 2(Event Player) == True;
 	}
 
@@ -5944,11 +5973,11 @@ rule("CORE: (TEAM) FIRE ZARYA PROJ BUBBLE CLEAN")
 	actions
 	{
 		Event Player.Aim = Player Closest To Reticle(Event Player, Team 2);
-		If(Event Player.Aim.BurnStatus[0] != Null);
-			Stop Damage Over Time(Event Player.Aim.BurnStatus[0]);
-			Clear Status(Event Player.Aim, Burning);
-			Event Player.Aim.BurnStatus[0] = Null;
-		End;
+		Stop Damage Over Time(Event Player.Aim.BurnStatus[0]);
+		Clear Status(Event Player, Burning);
+		Event Player.Aim.BurnTimer = 0;
+		Event Player.Aim.BurnStatus[1] = 0;
+		Event Player.Aim.BurnStatus[2] = 0;
 	}
 }
 
@@ -5964,7 +5993,6 @@ rule("CORE: (ALL) FIRE DEATH CLEAN")
 	conditions
 	{
 		Is Dead(Event Player) == True;
-		Event Player.BurnStatus[0] != Null;
 	}
 
 	actions
@@ -5984,7 +6012,6 @@ rule("CORE: (ALL) FIRE SUZU/GRIP CLEAN")
 
 	conditions
 	{
-		Event Player.BurnStatus[0] != Null;
 		((Hero Of(Healer) == Hero(Kiriko) || Hero Of(Healer) == Hero(Lifeweaver)) && Event Ability == Button(Ability 2)) == True;
 	}
 
@@ -6005,7 +6032,6 @@ rule("CORE: (ALL) FIRE HP PACK CLEAN")
 
 	conditions
 	{
-		Event Player.BurnStatus[0] != Null;
 		Event Was Health Pack == True;
 	}
 
@@ -19748,8 +19774,8 @@ rule("CORE: (TEAM) ILLARI HS BURN")
 
 	actions
 	{
-		Victim.BurnStatus[1] = 0.75;
-		Victim.BurnStatus[2] = 16.667;
+		Victim.BurnStatus[1] = Max(0.75, Victim.BurnTimer);
+		Victim.BurnStatus[2] = Max(16.667, Victim.BurnStatus[2]);
 		Call Subroutine(DealBurnDamage);
 	}
 }
@@ -19770,8 +19796,8 @@ rule("CORE: (TEAM) REIN FS BURN")
 
 	actions
 	{
-		Victim.BurnStatus[1] = 2.5;
-		Victim.BurnStatus[2] = 20;
+		Victim.BurnStatus[1] = Max(2.5, Victim.BurnTimer);
+		Victim.BurnStatus[2] = Max(20, Victim.BurnStatus[2]);
 		Call Subroutine(DealBurnDamage);
 	}
 }
@@ -19991,4 +20017,3 @@ rule("CORE: (BOSS) THAW RESET")
 		Global.BossFrozen = 0;
 	}
 }
-
