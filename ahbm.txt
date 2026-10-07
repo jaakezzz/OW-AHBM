@@ -139,7 +139,7 @@ settings
 				Health: 400%
 				Jump Vertical Speed: 250%
 				Passive Health Regeneration: On
-				Reconfigure Cooldown Time: 40%
+				Reconfigure Cooldown Time: 60%
 				Role Passives: Off
 				Ultimate Duration: 150%
 				Ultimate Generation Configuration: Artillery: 41%
@@ -221,11 +221,23 @@ settings
 				Ultimate Generation Self-Destruct: 50%
 			}
 
+			Doctrine
+			{
+				Health: 400%
+				Infuse Cooldown Time: 10%
+				Invigorating Drones: Off
+				Passive Health Regeneration: On
+				Role Passives: Off
+				Shrouded Momentum Cooldown Time: 37.5%
+				Shrouded Momentum Duration Scalar: 138%
+				Ultimate Generation - Passive Deliverance: 0%
+			}
+
 			Domina
 			{
 				Ammunition Clip Size Scalar: 50%
 				Barrier Array Cooldown Time: 85%
-				Crystal Charge Cooldown Time: 100%
+				Crystal Charge Cooldown Time: 114%
 				Damage Dealt: 200%
 				Damage Received: 20%
 				Healing Dealt: 10%
@@ -289,7 +301,7 @@ settings
 			Emre
 			{
 				Ammunition Clip Size Scalar: 50%
-				Cyber Frag Cooldown Time: 80%
+				Cyber Frag Cooldown Time: 88.88%
 				Cyber Frag Knockback Scalar: 80%
 				Damage Dealt: 225%
 				Damage Received: 40%
@@ -323,7 +335,7 @@ settings
 			Genji
 			{
 				Ammunition Clip Size Scalar: 70%
-				Damage Dealt: 250%
+				Damage Dealt: 225%
 				Deflect Cooldown Time: 83%
 				Healing Received: 25%
 				Health: 240%
@@ -724,11 +736,11 @@ settings
 
 			Roadhog
 			{
-				Ammunition Clip Size Scalar: 33%
-				Chain Hook Cooldown Time: 29%
+				Ammunition Clip Size Scalar: 25%
+				Chain Hook Cooldown Time: 33%
 				Damage Dealt: 192.3077%
 				Damage Received: 40%
-				Healing Dealt: 400%
+				Healing Dealt: 300%
 				Healing Received: 10%
 				Health: 200%
 				Jump Vertical Speed: 250%
@@ -736,8 +748,9 @@ settings
 				Passive Health Regeneration: On
 				Projectile Speed: 105%
 				Role Passives: Off
-				Take A Breather Maximum Time: 32%
+				Take A Breather Maximum Time: 48%
 				Take A Breather Recharge Rate: 20%
+				Trash Compactor: Off
 				Ultimate Generation - Combat Whole Hog: 0%
 				Ultimate Generation - Passive Whole Hog: 0%
 				Ultimate Generation Whole Hog: 172%
@@ -840,15 +853,16 @@ settings
 			Sombra
 			{
 				Ammunition Clip Size Scalar: 83%
-				Damage Dealt: 200%
+				Cyberspace: Off
+				Damage Dealt: 228.57%
 				Healing Received: 10%
 				Health: 322.22157%
+				Hotfix Cooldown Time: 0%
 				Movement Speed: 150%
 				Passive Health Regeneration: On
 				Role Passives: On
 				Translocator Cooldown Time: 500%
 				Ultimate Generation EMP: 66%
-				Virus: Off
 			}
 
 			Symmetra
@@ -1127,7 +1141,7 @@ settings
 				Health: 114.28585%
 				Movement Speed: 80%
 				Passive Health Regeneration: On
-				Reconfigure Cooldown Time: 40%
+				Reconfigure Cooldown Time: 50%
 				Role Passives: Off
 				Ultimate Duration: 75%
 				Ultimate Generation - Passive Configuration: Artillery: 102%
@@ -1200,11 +1214,20 @@ settings
 				Ultimate Generation - Passive Self-Destruct: 120%
 			}
 
+			Doctrine
+			{
+				Damage Dealt: 83.333%
+				Healing Dealt: 25%
+				Healing Received: 100%
+				Passive Health Regeneration: On
+				Role Passives: Off
+			}
+
 			Domina
 			{
 				Ammunition Clip Size Scalar: 30%
 				Barrier Array Cooldown Time: 57%
-				Crystal Charge Cooldown Time: 125%
+				Crystal Charge Cooldown Time: 142%
 				Damage Dealt: 60%
 				Healing Received: 40%
 				Health: 71.1108%
@@ -1258,7 +1281,7 @@ settings
 			Emre
 			{
 				Ammunition Clip Size Scalar: 75%
-				Cyber Frag Cooldown Time: 200%
+				Cyber Frag Cooldown Time: 222.22%
 				Cyber Frag Knockback Scalar: 100%
 				Damage Dealt: 50%
 				Healing Dealt: 500%
@@ -1648,16 +1671,17 @@ settings
 
 			Roadhog
 			{
-				Ammunition Clip Size Scalar: 66%
-				Chain Hook Cooldown Time: 257%
-				Damage Dealt: 50%
-				Healing Dealt: 60%
+				Ammunition Clip Size Scalar: 50%
+				Chain Hook Cooldown Time: 300%
+				Damage Dealt: 54%
+				Healing Dealt: 45%
 				Healing Received: 66%
 				Health: 125%
 				Passive Health Regeneration: On
 				Role Passives: On
-				Take A Breather Maximum Time: 83%
+				Take A Breather Maximum Time: 125%
 				Take A Breather Recharge Rate: 42%
+				Trash Compactor: Off
 				Ultimate Generation - Passive Whole Hog: 6%
 				Ultimate Generation Whole Hog: 100%
 				Whole Hog Knockback Scalar: 40%
@@ -1745,18 +1769,18 @@ settings
 
 			Sombra
 			{
+				Cyberspace: Off
 				Damage Dealt: 45%
-				Hack: Off
+				Healing Dealt: 10%
 				Healing Received: 80%
 				Health: 66%
+				Hotfix: Off
 				Movement Speed: 115%
 				Passive Health Regeneration: On
 				Role Passives: On
-				Translocator Cooldown Time: 84%
-				Ultimate Generation - Combat EMP: 240%
+				Translocator Cooldown Time: 86.67%
+				Ultimate Generation - Combat EMP: 500%
 				Ultimate Generation - Passive EMP: 80%
-				Ultimate Generation EMP: 105%
-				Virus Cooldown Time: 500%
 			}
 
 			Symmetra
@@ -6593,7 +6617,7 @@ rule("CORE: INITIALIZE ROLES (GLOBAL A)")
 			Hanzo), Hero(Genji), Hero(Freja), Hero(Torbjörn), Hero(Sierra), Hero(Shion));
 		Global.A[4] = Array(Hero(Jetpack Cat), Hero(Mizuki), Hero(Zarya), Hero(Ana), Hero(Baptiste), Hero(D.Va), Hero(Illari), Hero(Juno),
 			Hero(Kiriko), Hero(Lúcio), Hero(Anran), Hero(Soldier: 76), Hero(Moira), Hero(Pharah), Hero(Sombra), Hero(
-			Wuyang), Hero(Zenyatta), Hero(Lifeweaver));
+			Wuyang), Hero(Zenyatta), Hero(Lifeweaver), Hero(Doctrine));
 	}
 }
 
@@ -9473,7 +9497,7 @@ rule("CORE: (TEAM) ALL - RE-ENABLE SECONDARY")
 	conditions
 	{
 		Has Spawned(Event Player) == True;
-		Array Contains(Array(Hero(D.Va), Hero(Sombra), Hero(Reaper)), Hero Of(Event Player)) == False;
+		Array Contains(Array(Hero(D.Va), Hero(Sombra), Hero(Reaper), Hero(Roadhog)), Hero Of(Event Player)) == False;
 	}
 
 	actions
@@ -9493,7 +9517,7 @@ rule("CORE: (TEAM) ALL - DISABLE SECONDARY FIRE")
 
 	conditions
 	{
-		(Hero Of(Event Player) == Hero(Sombra) || Hero Of(Event Player) == Hero(Reaper)) == True;
+		Array Contains(Array(Hero(Sombra), Hero(Reaper), Hero(Roadhog)), Hero Of(Event Player)) == True;
 	}
 
 	actions
@@ -10374,7 +10398,7 @@ rule("CORE: (BOSS) DISABLE 2nd FIRE")
 
 	conditions
 	{
-		Array Contains(Array(Hero(Baptiste), Hero(Zenyatta), Hero(Illari), Hero(Winston), Hero(Reaper)), Hero Of(Event Player)) == True;
+		Array Contains(Array(Hero(Baptiste), Hero(Zenyatta), Hero(Illari), Hero(Winston), Hero(Reaper), Hero(Roadhog)), Hero Of(Event Player)) == True;
 	}
 
 	actions
@@ -10394,7 +10418,7 @@ rule("CORE: (BOSS) ENABLE 2nd FIRE")
 
 	conditions
 	{
-		Array Contains(Array(Hero(Baptiste), Hero(Zenyatta), Hero(Illari), Hero(Genji), Hero(Winston), Hero(Reaper)), Hero Of(
+		Array Contains(Array(Hero(Baptiste), Hero(Zenyatta), Hero(Illari), Hero(Genji), Hero(Winston), Hero(Reaper), Hero(Roadhog)), Hero Of(
 			Event Player)) != True;
 		Has Spawned(Event Player) == True;
 	}
@@ -13449,7 +13473,10 @@ rule("CORE: (TEAM) ALL - ABILITY 1 SET")
 
 	actions
 	{
+		Skip If(Hero Of(Event Player) == Hero(Sombra), 2);
 		Set Ability 1 Enabled(Event Player, True);
+		Abort;
+		Set Ability 1 Enabled(Event Player, False);
 	}
 }
 
@@ -13673,6 +13700,12 @@ rule("CORE: (TEAM) REAP - SPAWN ABILITY HUD")
 		Ongoing - Each Player;
 		Team 2;
 		Reaper;
+	}
+
+	Conditions
+	{
+		"DO NOT REMOVE"
+		Has Spawned(Event Player) == True;
 	}
 
 	actions
@@ -15722,7 +15755,7 @@ rule("CORE: (TEAM) SOMBRA - HUD")
 		Destroy Progress Bar HUD Text(Event Player.team_abilityHUD[0]);
 		Wait(0.016, Ignore Condition);
 		Create HUD Text(Event Player, Ability Icon String(Hero(Sombra), Button(Ultimate)), Custom String(
-			"HIT THE BOSS WITH VIRUS TO CHARGE EMP QUICKLY"), Custom String("EMP HACK"), Left, 10, Color(Violet), Color(White), Color(
+			"EMP DESTROYS ALL SHIELDS AND OVERHEALTH"), Custom String("EMP HACK"), Left, 10, Color(Violet), Color(White), Color(
 			Rose), Visible To and String, Default Visibility);
 		Event Player.team_abilityHUD[0] = Last Text ID;
 		Event Player.Ability_Bool = False;
