@@ -1141,7 +1141,7 @@ settings
 				Health: 114.28585%
 				Movement Speed: 80%
 				Passive Health Regeneration: On
-				Reconfigure Cooldown Time: 50%
+				Reconfigure Cooldown Time: 80%
 				Role Passives: Off
 				Ultimate Duration: 75%
 				Ultimate Generation - Passive Configuration: Artillery: 102%
@@ -1321,7 +1321,7 @@ settings
 				Passive Health Regeneration: On
 				Projectile Speed: 100%
 				Role Passives: Off
-				Swift Strike Cooldown Time: 112%
+				Swift Strike Cooldown Time: 75%
 				Ultimate Duration: 67%
 				Ultimate Generation - Combat Dragonblade: 0%
 				Ultimate Generation - Passive Dragonblade: 400%
@@ -1891,7 +1891,7 @@ settings
 			Wrecking Ball
 			{
 				Adaptive Shield Cooldown Time: 213%
-				Ammunition Clip Size Scalar: 40%
+				Ammunition Clip Size Scalar: 50%
 				Damage Dealt: 60%
 				Grappling Claw Cooldown Time: 160%
 				Healing Received: 66%
@@ -5698,26 +5698,26 @@ rule("CORE: (BOSS) HOG - FLAME ON")
 
 rule("CORE: (BOSS) HOG - FLAME OFF")
 {
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		Roadhog;
-	}
+    event
+    {
+        Ongoing - Each Player;
+        Team 1;
+        Roadhog;
+    }
 
-	conditions
-	{
-		Ultimate Charge Percent(Event Player) != 100;
-		Is Waiting For Players == False;
-	}
+    conditions
+    {
+        Ultimate Charge Percent(Event Player) != 100;
+        Is Using Ultimate(Event Player) == False;
+        Is Waiting For Players == False;
+        Has Status(Event Player, Burning) == True;
+        Event Player.BurnTimer <= 0;
+    }
 
-	actions
-	{
-		Skip If(Is Using Ultimate(Event Player), 1);
-		Clear Status(Event Player, Burning);
-		Wait(0.001, Ignore Condition);
-		Loop If Condition Is True;
-	}
+    actions
+    {
+        Clear Status(Event Player, Burning);
+    }
 }
 
 rule("CORE: (BOSS) HOG - SMOKE UP")
@@ -14700,6 +14700,27 @@ rule("CORE: (TEAM) BAP - SK HEAL ULT CHARGE")
 	actions
 	{
 		Set Ultimate Charge(Event Player, Ultimate Charge Percent(Event Player) + 0.227 * Event Healing);
+	}
+}
+
+rule("CORE: (TEAM) HAM - SPAWN")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 2;
+		Wrecking Ball;
+	}
+
+	conditions
+	{
+		"DO NOT REMOVE"
+		(Has Spawned(Event Player) == True || Event Player.current_hero != Hero(Wrecking Ball)) == True;
+	}
+
+	actions
+	{
+		Set Ultimate Charge(Event Player, Max(Ultimate Charge Percent(Event Player), 15));
 	}
 }
 
