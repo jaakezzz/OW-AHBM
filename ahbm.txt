@@ -133,13 +133,13 @@ settings
 			{
 				A-36 Tactical Grenade Cooldown Time: 250%
 				A-36 Tactical Grenade Knockback Scalar: 150%
-				Ammunition Clip Size Scalar: 250%
+				Ammunition Clip Size Scalar: 32%
 				Healing Dealt: 10%
 				Healing Received: 25%
 				Health: 400%
 				Jump Vertical Speed: 250%
 				Passive Health Regeneration: On
-				Reconfigure Cooldown Time: 60%
+				Reconfigure Cooldown Time: 48%
 				Role Passives: Off
 				Ultimate Duration: 150%
 				Ultimate Generation Configuration: Artillery: 41%
@@ -936,10 +936,10 @@ settings
 				Burrow Cooldown Time: 200%
 				Burrow Duration Scalar: 175%
 				Damage Dealt: 200%
-				Damage Received: 55%
+				Damage Received: 42%
 				Drill Dash Cooldown Time: 112%
 				Healing Received: 20%
-				Health: 300%
+				Health: 100%
 				Passive Health Regeneration: On
 				Role Passives: Off
 				Ultimate Duration: 200%
@@ -1141,7 +1141,7 @@ settings
 				Health: 114.28585%
 				Movement Speed: 80%
 				Passive Health Regeneration: On
-				Reconfigure Cooldown Time: 80%
+				Reconfigure Cooldown Time: 40%
 				Role Passives: Off
 				Ultimate Duration: 75%
 				Ultimate Generation - Passive Configuration: Artillery: 102%
@@ -3415,9 +3415,15 @@ rule("CORE: (TEAM) ALL - GENERAL SWITCH")
 			Destroy Effect(Event Player.PlayerFX_2);
 			Destroy Effect(Event Player.PlayerFX_3);
 			Set Max Health(Event Player, 100);
+			Wait(0.016, Ignore Condition);
+			If(Hero Of(Event Player) == Hero(Jetpack Cat));
+				Set Knockback Dealt(Event Player, 0);
+			Else If(Hero Of(Event Player) == Hero(Wrecking Ball));
+				Set Ultimate Charge(Event Player, 15);
+			End;
 		End;
 		Wait(0.016, Ignore Condition);
-		If(Hero Of(Event Player) == Hero(Illari) || Hero Of(Event Player) == Hero(Jetpack Cat));
+		If(Hero Of(Event Player) == Hero(Illari));
 			Set Knockback Dealt(Event Player, 0);
 		Else If(Hero Of(Event Player) == Hero(Zenyatta));
 			Set Knockback Dealt(Event Player, 4);
@@ -7707,7 +7713,7 @@ rule("CORE: (MSGS) TEAM HUD ERASE")
 
 	conditions
 	{
-		Array Contains(Array(Hero(Doomfist), Hero(D.Mon), Hero(Jetpack Cat), Hero(Roadhog), Hero(Mauga), Hero(Illari), Hero(Mercy), Hero(Torbjörn), Hero(Sojourn), Hero(Orisa), Hero(Domina), Hero(Mizuki), Hero(Hazard), Hero(Sierra), Hero(Shion)), Hero Of(Event Player)) == True;
+		Array Contains(Array(Hero(Doomfist), Hero(Doctrine), Hero(D.Mon), Hero(Jetpack Cat), Hero(Roadhog), Hero(Mauga), Hero(Illari), Hero(Mercy), Hero(Torbjörn), Hero(Sojourn), Hero(Orisa), Hero(Domina), Hero(Mizuki), Hero(Hazard), Hero(Sierra), Hero(Shion)), Hero Of(Event Player)) == True;
 	}
 
 	actions
@@ -10784,6 +10790,26 @@ rule("CORE: (BOSS) JUNO: HEALTH POOL")
 	}
 }
 
+rule("CORE: (BOSS) VEN: HEALTH POOL")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		Venture;
+	}
+
+	actions
+	{
+		Remove Health Pool From Player(Global.BOSS_HealthPools[0]);
+		Remove Health Pool From Player(Global.BOSS_HealthPools[1]);
+		Add Health Pool To Player(Event Player, Health, 350, True, False);
+		Global.BOSS_HealthPools[0] = Last Created Health Pool;
+		Event Player.base_health = Max Health(Event Player);
+		Event Player.base_shields = Max Health Of Type(Event Player, Shields);
+	}
+}
+
 rule("CORE: (BOSS) SHION: HEALTH POOL")
 {
 	event
@@ -10801,7 +10827,6 @@ rule("CORE: (BOSS) SHION: HEALTH POOL")
 		Global.BOSS_HealthPools[0] = Last Created Health Pool;
 		Event Player.base_health = Max Health(Event Player);
 		Event Player.base_shields = Max Health Of Type(Event Player, Shields);
-		Set Healing Dealt(Event Player, 100);
 	}
 }
 
@@ -10888,7 +10913,7 @@ rule("CORE: (BOSS) General: REMOVE POOLS")
 
 	conditions
 	{
-		Array Contains(Array(Hero(Genji), Hero(Hanzo), Hero(Widowmaker), Hero(Juno), Hero(Ashe), Hero(Domina), Hero(Echo), Hero(Shion), Hero(Sigma),
+		Array Contains(Array(Hero(Genji), Hero(Hanzo), Hero(Widowmaker), Hero(Juno), Hero(Ashe), Hero(Domina), Hero(Echo), Hero(Shion), Hero(Sigma), Hero(Venture),
 			Hero(Winston)), Hero Of(Event Player)) != True;
 		Has Spawned(Event Player) == True;
 		Is Alive(Event Player) == True;
@@ -12495,7 +12520,7 @@ rule("CORE: (TEAM) ALL - ULT LOSS")
 
 	conditions
 	{
-		(Hero Of(Event Player) == Hero(Winston) || Hero Of(Event Player) == Hero(Zenyatta)) == True;
+		Array Contains(Array(Hero(Zenyatta), Hero(Winston), Hero(Vendetta)), Hero Of(Event Player)) == True;
 	}
 
 	actions
@@ -12505,22 +12530,7 @@ rule("CORE: (TEAM) ALL - ULT LOSS")
 		Set Ultimate Charge(Event Player, Ultimate Charge Percent(Event Player) - 12);
 		Skip If(Hero Of(Event Player) != Hero(Winston), 1);
 		Set Ultimate Charge(Event Player, Ultimate Charge Percent(Event Player) - 50);
-		Skip If(Ultimate Charge Percent(Event Player) >= 0, 1);
-		Set Ultimate Charge(Event Player, 0);
-	}
-}
-
-rule("CORE: (TEAM) VENDETTA - ULT LOSS")
-{
-	event
-	{
-		Player Died;
-		Team 2;
-		Vendetta;
-	}
-
-	actions
-	{
+		Skip If(Hero Of(Event Player) != Hero(Vendetta), 1);
 		Set Ultimate Charge(Event Player, Ultimate Charge Percent(Event Player) - Ultimate Charge Percent(Event Player) * (
 			Ultimate Charge Percent(Event Player) / 100));
 		Skip If(Ultimate Charge Percent(Event Player) >= 0, 1);
@@ -13200,6 +13210,9 @@ rule("CORE: (ALL) SET SPAWN")
 	{
 		Event Player.SpawnStats[0] = Position Of(Event Player);
 		Event Player.SpawnStats[1] = Ultimate Charge Percent(Event Player);
+		If(Hero Of(Event Player) == Hero(Wrecking Ball) && Team Of(Event Player) == Team 2);
+			Event Player.SpawnStats[1] = 15;
+		End;
 	}
 }
 
@@ -19094,6 +19107,7 @@ rule("CORE: (BOSS) Bastion turret jump")
 	conditions
 	{
 		Is Using Ability 1(Event Player) == True;
+		Is On Ground(Event Player) == True;
 	}
 
 	actions
