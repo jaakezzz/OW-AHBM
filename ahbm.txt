@@ -3641,7 +3641,7 @@ rule("CORE: (BOSS) REIN - FLAME ON")
 	conditions
 	{
 		Event Player.FireStrike == 0;
-		disabled Is Waiting For Players == False;
+		Global.BossFrozen == 0;
 		Has Status(Event Player, Hacked) == False;
 	}
 
@@ -4102,6 +4102,7 @@ rule("CORE: (BOSS) D.VA - 1/3 ULTIMATE")
 
 	conditions
 	{
+		Global.BossFrozen == 0;
 		Is Alive(Event Player) == True;
 		Ultimate Charge Percent(Event Player) < 33;
 		Is Waiting For Players == False;
@@ -4127,6 +4128,7 @@ rule("CORE: (BOSS) D.VA - 2/3 ULTIMATE")
 
 	conditions
 	{
+		Global.BossFrozen == 0;
 		Is Alive(Event Player) == True;
 		(Ultimate Charge Percent(Event Player) >= 33 && Ultimate Charge Percent(Event Player) < 66) == True;
 		Is Waiting For Players == False;
@@ -4152,6 +4154,7 @@ rule("CORE: (BOSS) D.VA - 3/3 ULTIMATE")
 
 	conditions
 	{
+		Global.BossFrozen == 0;
 		Is Alive(Event Player) == True;
 		(Ultimate Charge Percent(Event Player) >= 66 && Ultimate Charge Percent(Event Player) < 100) == True;
 		Is Waiting For Players == False;
@@ -4177,6 +4180,7 @@ rule("CORE: (BOSS) D.VA - FULL ULTIMATE")
 
 	conditions
 	{
+		Global.BossFrozen == 0;
 		Is Alive(Event Player) == True;
 		Ultimate Charge Percent(Event Player) == 100;
 		Is Waiting For Players == False;
@@ -5688,6 +5692,7 @@ rule("CORE: (BOSS) HOG - FLAME ON")
 	{
 		(Is Using Ultimate(Event Player) || Ultimate Charge Percent(Event Player) == 100) == True;
 		Is Waiting For Players == False;
+		Global.BossFrozen == 0;
 	}
 
 	actions
@@ -5732,6 +5737,7 @@ rule("CORE: (BOSS) HOG - SMOKE UP")
 	conditions
 	{
 		Ultimate Charge Percent(Event Player) > 70;
+		Global.BossFrozen == 0;
 		Is Waiting For Players == False;
 	}
 
@@ -11029,16 +11035,7 @@ rule("CORE: (BOSS) REIN - FIRE THAW")
 	actions
 	{
 		Call Subroutine(BossClearFreeze);
-		Skip If(Event Player.primary_charge < 1, 4);
-		Set Ability 2 Enabled(Event Player, True);
-		Skip If(Is Waiting For Players, 1);
-		Set Status(Event Player, Null, Burning, 9999);
-		Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
 		Event Player.FireStrike = 0;
-		Skip If(Event Player.primary_charge >= 2, 1);
-		Chase Player Variable At Rate(Event Player, FireStrike, 0, 1, Destination and Rate);
-		Skip If(Is Alive(Event Player), 1);
-		Set Ability 2 Enabled(Event Player, True);
 	}
 }
 
@@ -11053,49 +11050,20 @@ rule("CORE: (BOSS) HOG - ULTIMATE THAW")
 
 	conditions
 	{
-		Global.BossFrozen[0] == -1;
-		Event Player.F == 0;
-		Is Alive(Event Player) == True;
+		(Is Dead(Event Player) ||  (Global.BossFrozen[0] == -1 && Event Player.F == 0)) == True;
 	}
 
 	actions
 	{
 		Call Subroutine(BossClearFreeze);
+		Call Subroutine(BOSSNoAbility_Hud);
 		Set Ultimate Ability Enabled(Event Player, True);
+		Abort If(Is Dead(Event Player));
 		Wait(0.016, Ignore Condition);
 		Set Ultimate Charge(Event Player, Event Player.X[0]);
-		Skip If(Is Waiting For Players, 3);
-		Skip If(Ultimate Charge Percent(Event Player) < 100, 2);
+		Abort If(Is Waiting For Players);
+		Abort If(Ultimate Charge Percent(Event Player) < 100);
 		Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
-		Set Status(Event Player, Null, Burning, 9999);
-		Call Subroutine(BOSSNoAbility_Hud);
-		Skip If(Is Waiting For Players, 4);
-		Skip If(Ultimate Charge Percent(Event Player) > 70, 2);
-		Destroy Effect(Event Player.H);
-		Create Effect(All Players(Team 2), Cloud, Color(Orange), Event Player, 1, Visible To Position and Radius);
-		Event Player.H = Last Created Entity;
-	}
-}
-
-rule("CORE: (BOSS) HOG - ULTIMATE THAW DEATH")
-{
-	event
-	{
-		Player Died;
-		Team 1;
-		Roadhog;
-	}
-
-	actions
-	{
-		Call Subroutine(BossClearFreeze);
-		Call Subroutine(BOSSNoAbility_Hud);
-		Set Ultimate Ability Enabled(Event Player, True);
-		Skip If(Is Waiting For Players, 4);
-		Skip If(Ultimate Charge Percent(Event Player) > 70, 2);
-		Destroy Effect(Event Player.H);
-		Create Effect(All Players(Team 2), Cloud, Color(Orange), Event Player, 1, Visible To Position and Radius);
-		Event Player.H = Last Created Entity;
 	}
 }
 
@@ -11120,16 +11088,6 @@ rule("CORE: (BOSS) ASHE - DYNAMITE THAW")
 		Set Ability 2 Enabled(Event Player, True);
 		Set Ability Cooldown(Event Player, Button(Ability 2), Event Player.X[0]);
 		Allow Button(Event Player, Button(Ability 2));
-		Skip If(Event Player.Ability_Bool, 2);
-		Create HUD Text(All Players(Team 1), Ability Icon String(Hero(Ashe), Button(Primary Fire)), Custom String(
-			"Primary Ammo Active | Hold {0} to use/reload the scope", Input Binding String(Button(Secondary Fire))), Custom String(
-			"PRIMARY LOADED:  {0}", Ammo(Event Player, 0)), Left, 1, Color(Rose), Color(White), Color(White), Visible To and String,
-			Default Visibility);
-		Skip(1);
-		Create HUD Text(All Players(Team 1), Ability Icon String(Hero(Ashe), Button(Primary Fire)), Custom String("Scope Ammo Active"),
-			Custom String("SCOPE LOADED:  {0}", Ammo(Event Player, 0)), Left, 1, Color(Rose), Color(Rose), Color(White),
-			Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
 		Event Player.X[0] = 0;
 	}
 }
@@ -11168,9 +11126,7 @@ rule("CORE: (BOSS) TORB - ULTIMATE THAW")
 
 	conditions
 	{
-		Global.BossFrozen[0] == -1;
-		Event Player.F == 0;
-		Is Alive(Event Player) == True;
+		(Is Dead(Event Player) ||  (Global.BossFrozen[0] == -1 && Event Player.F == 0)) == True;
 	}
 
 	actions
@@ -11179,23 +11135,6 @@ rule("CORE: (BOSS) TORB - ULTIMATE THAW")
 		Set Ultimate Ability Enabled(Event Player, True);
 		Wait(0.016, Ignore Condition);
 		Call Subroutine(BOSSNoAbility_Hud);
-	}
-}
-
-rule("CORE: (BOSS) TORB - ULTIMATE THAW DEATH")
-{
-	event
-	{
-		Player Died;
-		Team 1;
-		Torbjörn;
-	}
-
-	actions
-	{
-    	Call Subroutine(BossClearFreeze);
-		Call Subroutine(BOSSNoAbility_Hud);
-		Set Ultimate Ability Enabled(Event Player, True);
 	}
 }
 
@@ -11242,15 +11181,6 @@ rule("CORE: (BOSS) HAM - SLAM THAW")
 	{
 		Call Subroutine(BossClearFreeze);
 		Set Ability Cooldown(Event Player, Button(Crouch), 0);
-		Skip If(Max Health(Event Player) < 1001, 2);
-		Create HUD Text(Event Player, Ability Icon String(Hero(Wrecking Ball), Button(Ability 2)), Custom String(
-			"rapidly press shields to keep them active!"), Custom String("SHIELDS ACTIVE"), Left, 1, Color(Green), Color(White), Color(
-			Green), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Ability Icon String(Hero(Wrecking Ball), Button(Ability 2)), Custom String(
-			"rapidly press shields to keep them active!"), Custom String("SHIELDS DOWN"), Left, 1, Color(Red), Color(White), Color(Red),
-			Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
 	}
 }
 
@@ -11340,52 +11270,21 @@ rule("CORE: (BOSS) D.VA - MECH THAW")
 
 	conditions
 	{
-		Global.BossFrozen[0] == -1;
-		Event Player.F == 0;
-		Is Alive(Event Player) == True;
+		(Is Dead(Event Player) ||  (Global.BossFrozen[0] == -1 && Event Player.F == 0)) == True;
 	}
 
 	actions
 	{
 		Call Subroutine(BossClearFreeze);
+		Call Subroutine(BOSSNoAbility_Hud);
 		Set Ultimate Ability Enabled(Event Player, True);
 		Set Ability 1 Enabled(Event Player, True);
+		Abort If(Is Dead(Event Player));
 		Wait(0.016, Ignore Condition);
 		Skip If(Is In Alternate Form(Event Player), 1);
 		Set Ultimate Charge(Event Player, Event Player.X[0]);
-		Call Subroutine(BOSSNoAbility_Hud);
-		Skip If(Is Waiting For Players, 11);
-		Skip If(Ultimate Charge Percent(Event Player) > 33, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(Gray), Event Player, 0.500, Visible To Position and Radius);
-		Event Player.N = Last Created Entity;
-		Skip If(Ultimate Charge Percent(Event Player) > 66 || Ultimate Charge Percent(Event Player) <= 33, 2);
-		Create Effect(All Players(All Teams), Cloud, Color(Rose), Event Player, 0.500, Visible To Position and Radius);
-		Event Player.N = Last Created Entity;
-		Skip If(Ultimate Charge Percent(Event Player) <= 66, 4);
-		Create Effect(All Players(All Teams), Cloud, Color(Green), Event Player, 0.500, Visible To Position and Radius);
-		Event Player.N = Last Created Entity;
-		Create Effect(All Players(Team 2), Bad Aura, Color(Green), Event Player, 0.100, Visible To Position and Radius);
-		Event Player.PlayerFX_2 = Last Created Entity;
 		Wait(0.050, Ignore Condition);
 		Destroy Effect(Event Player.PlayerFX_3);
-	}
-}
-
-rule("CORE: (BOSS) D.VA - MECH THAW DEATH")
-{
-	event
-	{
-		Player Died;
-		Team 1;
-		D.Va;
-	}
-
-	actions
-	{
-		Call Subroutine(BossClearFreeze);
-		Call Subroutine(BOSSNoAbility_Hud);
-		Set Ultimate Ability Enabled(Event Player, True);
-		Set Ability 1 Enabled(Event Player, True);
 	}
 }
 
@@ -13550,6 +13449,7 @@ rule("CORE: (BOSS) HAM - SHIELD ACTIVE HUD")
 
 	conditions
 	{
+		Global.BossFrozen == 0;
 		Max Health(Event Player) >= 1001;
 	}
 
@@ -13574,6 +13474,7 @@ rule("CORE: (BOSS) HAM - SHIELD DOWN HUD")
 
 	conditions
 	{
+		Global.BossFrozen == 0;
 		Max Health(Event Player) < 1001;
 	}
 
@@ -15047,6 +14948,7 @@ rule("CORE: (BOSS) ASHE - SCOPE HUD")
 	conditions
 	{
 		Event Player.Ability_Bool == True;
+		Global.BossFrozen == 0;
 	}
 
 	actions
@@ -15071,6 +14973,7 @@ rule("CORE: (BOSS) ASHE - HIP HUD")
 	conditions
 	{
 		Event Player.Ability_Bool == False;
+		Global.BossFrozen == 0;
 	}
 
 	actions
