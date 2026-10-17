@@ -2407,18 +2407,7 @@ rule("CORE: (WAIT) WAITING MENU (MAKE)")
 
 	actions
 	{
-		Skip If(Is Waiting For Players, 10);
-		Destroy HUD Text(Global.BOSS_StatusArray);
-		Destroy HUD Text(Global.D);
-		Destroy HUD Text(Global.V);
-		Destroy HUD Text(Global.X[1]);
-		Destroy HUD Text(Global.X[2]);
-		Destroy HUD Text(Global.X[3]);
-		Destroy HUD Text(Global.X[4]);
-		Destroy HUD Text(Global.X[5]);
-		Destroy HUD Text(Global.X[6]);
-		Destroy HUD Text(Global.X[7]);
-		Skip If(!Is Waiting For Players, 20);
+		Abort If(!Is Waiting For Players);
 		Create HUD Text(All Players(All Teams), Custom String("{0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(
 			Button(Ability 2))), Custom String("[gives 1min immortality]"), Custom String("SELF REVIVE"), Top, 5, Color(White), Color(
 			White), Color(Yellow), Visible To and String, Default Visibility);
@@ -2433,11 +2422,11 @@ rule("CORE: (WAIT) WAITING MENU (MAKE)")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("WAITING ROOM ™ ABILITIES:"), Top, 2, Color(White), Color(White),
 			Color(Lime Green), Visible To and String, Default Visibility);
 		Global.X[1] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Custom String("6 OR 7 PLAYERS NEEDED"), Null, Top, -0.200, Color(White), Color(
-			White), Color(White), Visible To and String, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, (Number Of Players(All Teams) < 6 ? Custom String("6 OR 7 PLAYERS NEEDED") : Custom String("READY TO START!")), Null, Top, -0.200, Color(White), Color(
+			White), (Number Of Players(All Teams) < 6 ? Color(White) : Color(Green)), Visible To String And Color, Default Visibility);
 		Global.X[2] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} Players Connected", Number Of Players(All Teams)), Top,
-			-0.100, Color(White), Color(White), Color(Orange), Visible To and String, Default Visibility);
+			-0.100, Color(White), Color(White), (Number Of Players(All Teams) < 6 ? Color(Orange) : Color(Green)), Visible To String And Color, Default Visibility);
 		Global.X[3] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Custom String(""), Custom String("• ANY HERO BOSS MODE ™ •"), Top, -1.100, Color(
 			White), Color(White), Color(White), Visible To and String, Default Visibility);
@@ -2455,63 +2444,7 @@ rule("CORE: (WAIT) WAITING MENU (MAKE)")
 	}
 }
 
-rule("CORE: (WAIT) PLAYER COUNT MSG - VIA JOIN")
-{
-	event
-	{
-		Player Joined Match;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Is Waiting For Players == True;
-	}
-
-	actions
-	{
-		Skip If(Number Of Players(All Teams) < 6, 6);
-		Destroy HUD Text(Global.X[2]);
-		Create HUD Text(All Players(All Teams), Null, Custom String("READY TO START!"), Null, Top, -0.200, Color(White), Color(White),
-			Color(Green), Visible To and String, Default Visibility);
-		Global.X[2] = Last Text ID;
-		Destroy HUD Text(Global.X[3]);
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} Players Connected", Number Of Players(All Teams)), Top,
-			-0.100, Color(White), Color(White), Color(Green), Visible To and String, Default Visibility);
-		Global.X[3] = Last Text ID;
-	}
-}
-
-rule("CORE: (WAIT) PLAYER COUNT MSG - VIA LEAVE")
-{
-	event
-	{
-		Player Left Match;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Is Waiting For Players == True;
-	}
-
-	actions
-	{
-		Skip If(Number Of Players(All Teams) >= 6, 6);
-		Destroy HUD Text(Global.X[2]);
-		Create HUD Text(All Players(All Teams), Null, Custom String("6 OR 7 PLAYERS NEEDED"), Null, Top, -0.200, Color(White), Color(
-			White), Color(White), Visible To and String, Default Visibility);
-		Global.X[2] = Last Text ID;
-		Destroy HUD Text(Global.X[3]);
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} Players Connected", Number Of Players(All Teams)), Top,
-			-0.100, Color(White), Color(White), Color(Orange), Visible To and String, Default Visibility);
-		Global.X[3] = Last Text ID;
-	}
-}
-
-rule("CORE: (WAIT) THIRD PERSON ON")
+rule("CORE: (WAIT) THIRD PERSON")
 {
 	event
 	{
@@ -2523,40 +2456,19 @@ rule("CORE: (WAIT) THIRD PERSON ON")
 	conditions
 	{
 		Is Waiting For Players == True;
-		Event Player.Third_Person == False;
 		Is Button Held(Event Player, Button(Interact)) == True;
 	}
 
 	actions
 	{
-		Start Camera(Event Player, Position Of(Event Player) + Facing Direction Of(Event Player) * -3.800 + Vector(0, 2, 0), Position Of(
-			Event Player) + Vector(0, 1.880, 0), 25);
+		If(Event Player.Third_Person);
+			Stop Camera(Event Player);
+		Else;
+			Start Camera(Event Player, Position Of(Event Player) + Facing Direction Of(Event Player) * -3.800 + Vector(0, 2, 0), Position Of(
+				Event Player) + Vector(0, 1.880, 0), 25);
+		End;
 		Wait(0.250, Ignore Condition);
-		Event Player.Third_Person = True;
-	}
-}
-
-rule("CORE: (WAIT) THIRD PERSON OFF")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Is Waiting For Players == True;
-		Event Player.Third_Person == True;
-		Is Button Held(Event Player, Button(Interact)) == True;
-	}
-
-	actions
-	{
-		Stop Camera(Event Player);
-		Wait(0.250, Ignore Condition);
-		Event Player.Third_Person = False;
+		Event Player.Third_Person = !Event Player.Third_Person;
 	}
 }
 
@@ -2620,7 +2532,7 @@ rule("CORE: (WAIT) SELF KILL")
 	}
 }
 
-rule("CORE: (WAIT) ENABLE SELF RES")
+rule("CORE: (WAIT) SELF RES")
 {
 	event
 	{
@@ -2631,34 +2543,14 @@ rule("CORE: (WAIT) ENABLE SELF RES")
 
 	conditions
 	{
-		(!Event Was Environment && Is Waiting For Players) == True;
+		Is Waiting For Players == True;
+		Event Was Environment == False;
 	}
 
 	actions
 	{
-		Event Player.SelfRes = True;
-		Wait Until(Is Alive(Event Player), 8);
-		Event Player.SelfRes = False;
-	}
-}
-
-rule("CORE: (WAIT) SELF RES")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Is Waiting For Players && Event Player.SelfRes && Is Dead(Event Player)) == True;
-		(Is Button Held(Event Player, Button(Ability 2)) && Is Button Held(Event Player, Button(Ultimate))) == True;
-	}
-
-	actions
-	{
+		Wait Until(Is Alive(Event Player) || (Is Button Held(Event Player, Button(Ability 2)) && Is Button Held(Event Player, Button(Ultimate))), 8);
+		Abort If(Is Alive(Event Player));
 		Wait(0.100, Ignore Condition);
 		Resurrect(Event Player);
 		Set Status(Event Player, Event Player, Unkillable, 60);
