@@ -3893,7 +3893,7 @@ rule("CORE: (BOSS) REIN - SWITCH OFF")
 	}
 }
 
-rule("CORE: (BOSS) REIN - SWITCH ON")
+rule("CORE: (BOSS) REIN - SPAWN")
 {
 	event
 	{
@@ -3910,26 +3910,7 @@ rule("CORE: (BOSS) REIN - SWITCH ON")
 		Event Player.FireStrike = 5;
 		Stop Chasing Player Variable(Event Player, primary_charge);
 		Event Player.primary_charge = 2;
-	}
-}
-
-rule("CORE: (BOSS) REIN - SPAWN")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		Reinhardt;
-	}
-
-	actions
-	{
 		Set Ability 2 Enabled(Event Player, True);
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Custom String("{0} {0}", Icon String(Fire)), Custom String("CHARGES OF"), Custom String(
-			"FIRE STRIKE"), Left, 1, Color(Red), Color(White), Color(Red), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Event Player.primary_charge = 2;
 	}
 }
 
@@ -5348,23 +5329,7 @@ rule("CORE: (BOSS) SOMBRA SPAWN")
 
 	actions
 	{
-		Global.W = False;
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Input Binding String(Button(Ability 1)), Custom String("Damage"), Custom String("FOCUS"),
-			Left, 1, Color(White), Color(White), Color(Purple), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Set Move Speed(Event Player, 100);
-		Set Damage Dealt(Event Player, 70);
-		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
-			Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
-			"{0} {1}", Custom String("damage: "), Icon String(Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black),
-			Visible To and String, Default Visibility);
-		Event Player.charge_hud = Last Text ID;
+		Global.W = !Is Button Held(Event Player, button(Ability 1));
 	}
 }
 
@@ -5376,73 +5341,52 @@ rule("CORE: (BOSS) SOMBRA - FOCUS")
 		Team 1;
 		Sombra;
 	}
-
+	
 	conditions
 	{
-		Global.W == False;
-		Is Button Held(Event Player, Button(Ability 1)) == True;
+		Global.W != Is Button Held(Event Player, Button(Ability 1));
 	}
-
+	
 	actions
 	{
+		Global.W = Is Button Held(Event Player, Button(Ability 1));
 		Play Effect(All Players(Team 1), Buff Impact Sound, Color(White), Event Player, 25);
 		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Input Binding String(Button(Ability 1)), Custom String("Damage"), Custom String("FOCUS"),
-			Left, 1, Color(Orange), Color(Orange), Color(Orange), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Set Move Speed(Event Player, 70);
-		Set Damage Dealt(Event Player, 115);
 		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
-			Arrow: Up))), Top, 8, Color(White), Color(White), Color(Purple), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
-			"{0} {1}", Custom String("damage: "), Icon String(Arrow: Up))), Top, 8, Color(White), Color(White), Color(Purple),
-			Visible To and String, Default Visibility);
-		Event Player.charge_hud = Last Text ID;
-		Wait(0.500, Ignore Condition);
-		Global.W = True;
-	}
-}
-
-rule("CORE: (BOSS) SOMBRA - UNFOCUS")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		Sombra;
-	}
-
-	conditions
-	{
-		Global.W == True;
-		Is Button Held(Event Player, Button(Ability 1)) == False;
-	}
-
-	actions
-	{
-		Play Effect(All Players(Team 1), Buff Impact Sound, Color(White), Event Player, 25);
-		Destroy HUD Text(Global.BOSS_AbilityKey);
-		Create HUD Text(All Players(Team 1), Input Binding String(Button(Ability 1)), Custom String("Damage"), Custom String("FOCUS"),
-			Left, 1, Color(White), Color(White), Color(Purple), Visible To and String, Default Visibility);
-		Global.BOSS_AbilityKey = Last Text ID;
-		Set Move Speed(Event Player, 100);
-		Set Damage Dealt(Event Player, 70);
-		Destroy HUD Text(Event Player.charge_hud);
-		Skip If(Is Waiting For Players, 2);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
-			"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
-			Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black), Visible To and String, Default Visibility);
-		Skip(1);
-		Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
-			"{0} {1}", Custom String("damage: "), Icon String(Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black),
-			Visible To and String, Default Visibility);
-		Event Player.charge_hud = Last Text ID;
-		Wait(0.100, Ignore Condition);
-		Global.W = False;
+		If(Is Button Held(Event Player, Button(Ability 1)));
+			Create HUD Text(All Players(Team 1), Input Binding String(Button(Ability 1)), Custom String("Damage"), Custom String("FOCUS"),
+				Left, 1, Color(Orange), Color(Orange), Color(Orange), Visible To and String, Default Visibility);
+			Global.BOSS_AbilityKey = Last Text ID;
+			Set Move Speed(Event Player, 70);
+			Set Damage Dealt(Event Player, 115);
+			Skip If(Is Waiting For Players, 2);
+			Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
+				"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
+				Arrow: Up))), Top, 8, Color(White), Color(White), Color(Purple), Visible To and String, Default Visibility);
+			Skip(1);
+			Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
+				"{0} {1}", Custom String("damage: "), Icon String(Arrow: Up))), Top, 8, Color(White), Color(White), Color(Purple),
+				Visible To and String, Default Visibility);
+			Event Player.charge_hud = Last Text ID;
+			Wait(0.500, Ignore Condition);
+		Else;
+			Create HUD Text(All Players(Team 1), Input Binding String(Button(Ability 1)), Custom String("Damage"), Custom String("FOCUS"),
+				Left, 1, Color(White), Color(White), Color(Purple), Visible To and String, Default Visibility);
+			Global.BOSS_AbilityKey = Last Text ID;
+			Set Move Speed(Event Player, 100);
+			Set Damage Dealt(Event Player, 70);
+			Skip If(Is Waiting For Players, 2);
+			Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String(
+				"   \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String("{0} {1}", Custom String("damage: "), Icon String(
+				Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black), Visible To and String, Default Visibility);
+			Skip(1);
+			Create HUD Text(Event Player, Null, Null, String("{0} {1}", Custom String("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), String(
+				"{0} {1}", Custom String("damage: "), Icon String(Arrow: Down))), Top, 8, Color(White), Color(White), Color(Black),
+				Visible To and String, Default Visibility);
+			Event Player.charge_hud = Last Text ID;
+			Wait(0.100, Ignore Condition);
+		End;
+		Loop If Condition Is True;
 	}
 }
 
@@ -9574,20 +9518,8 @@ rule("CORE: (TEAM) WIDOW - SPAWN ABILITY HUD")
 
 	actions
 	{
-		Destroy HUD Text(Event Player.team_abilityHUD[0]);
-		Wait(0.016, Ignore Condition);
-		Create HUD Text(Event Player, Custom String("{0}%", Round To Integer(Ultimate Charge Percent(Event Player), Down)), Custom String(
-			"charging ultimate ability"), Custom String("double damage shot"), Left, 10, Color(Orange), Color(Orange), Color(Blue),
-			Visible To and String, Default Visibility);
-		Event Player.team_abilityHUD[0] = Last Text ID;
-		Event Player.Ability_Toggle = False;
-		Event Player.Ability_Bool = False;
+		Event Player.Ability_Bool = True;
 		Event Player.primary_charge = 0;
-		Stop Chasing Player Variable(Event Player, primary_charge);
-		disabled Chase Player Variable At Rate(Event Player, primary_charge, 100, 0.090, Destination and Rate);
-		Destroy Effect(Event Player.PlayerFX_1);
-		Destroy Effect(Event Player.PlayerFX_2);
-		Destroy Effect(Event Player.PlayerFX_3);
 	}
 }
 
@@ -9718,25 +9650,8 @@ rule("CORE: (TEAM) WIDOW - ULTIMATE HIT")
 
 	actions
 	{
-		Set Ultimate Ability Enabled(Event Player, False);
-		Play Effect(All Players(All Teams), Explosion Sound, Color(White), Victim, 200);
-		Wait(0.016, Ignore Condition);
-		Stop Chasing Player Variable(Event Player, primary_charge);
-		Set Damage Dealt(Event Player, 100);
 		Event Player.primary_charge = 0;
-		Event Player.Ability_Bool = False;
-		Destroy HUD Text(Event Player.team_abilityHUD[0]);
-		Wait(0.016, Ignore Condition);
-		Create HUD Text(Event Player, Custom String("{0}%", Round To Integer(Ultimate Charge Percent(Event Player), Down)), Custom String(
-			"charging ultimate ability"), Custom String("double damage shot"), Left, 10, Color(Orange), Color(Orange), Color(Blue),
-			Visible To and String, Default Visibility);
-		Event Player.team_abilityHUD[0] = Last Text ID;
-		disabled Chase Player Variable At Rate(Event Player, primary_charge, 100, 0.090, Destination and Rate);
-		Destroy Effect(Event Player.PlayerFX_1);
-		Destroy Effect(Event Player.PlayerFX_2);
-		Destroy Effect(Event Player.PlayerFX_3);
-		Wait(0.500, Ignore Condition);
-		Set Ultimate Ability Enabled(Event Player, True);
+		Play Effect(All Players(All Teams), Explosion Sound, Color(White), Victim, 200);
 	}
 }
 
@@ -9758,24 +9673,7 @@ rule("CORE: (TEAM) WIDOW - ULTIMATE MISSED")
 	actions
 	{
 		Wait(0.050, Ignore Condition);
-		Skip If(!Event Player.Ability_Bool, 15);
-		Set Ultimate Ability Enabled(Event Player, False);
-		Stop Chasing Player Variable(Event Player, primary_charge);
-		Set Damage Dealt(Event Player, 100);
 		Event Player.primary_charge = 0;
-		Event Player.Ability_Bool = False;
-		Destroy HUD Text(Event Player.team_abilityHUD[0]);
-		Wait(0.016, Ignore Condition);
-		Create HUD Text(Event Player, Custom String("{0}%", Round To Integer(Ultimate Charge Percent(Event Player), Down)), Custom String(
-			"charging ultimate ability"), Custom String("double damage shot"), Left, 10, Color(Orange), Color(Orange), Color(Blue),
-			Visible To and String, Default Visibility);
-		Event Player.team_abilityHUD[0] = Last Text ID;
-		disabled Chase Player Variable At Rate(Event Player, primary_charge, 100, 0.090, Destination and Rate);
-		Destroy Effect(Event Player.PlayerFX_1);
-		Destroy Effect(Event Player.PlayerFX_2);
-		Destroy Effect(Event Player.PlayerFX_3);
-		Wait(0.500, Ignore Condition);
-		Set Ultimate Ability Enabled(Event Player, True);
 	}
 }
 
@@ -10872,7 +10770,7 @@ rule("CORE: (BOSS) SIGMA: HEALTH & SIZE")
 
 	actions
 	{
-		Start Scaling Player(Event Player, 1, False);
+		Stop Scaling Player(Event Player);
 		Start Scaling Barriers(Event Player, 0.600, False);
 		Remove Health Pool From Player(Global.BOSS_HealthPools[0]);
 		Remove Health Pool From Player(Global.BOSS_HealthPools[1]);
@@ -10986,7 +10884,7 @@ rule("CORE: (TEAM) D.MON - SIZE")
 
 	actions
 	{
-		Start Scaling Player(Event Player, 1, False);
+		Stop Scaling Player(Event Player);
 		Start Scaling Barriers(Event Player, 2, False);
 	}
 }
@@ -11003,7 +10901,7 @@ rule("CORE: (ALL) BASTION - SIZE")
 	actions
 	{
 		Start Scaling Player(Event Player, 1.111, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Barriers(Event Player);
 	}
 }
 
@@ -11025,8 +10923,8 @@ rule("CORE: (TEAM) General - SIZE")
 
 	actions
 	{
-		Start Scaling Player(Event Player, 1, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Player(Event Player);
+		Stop Scaling Barriers(Event Player);
 	}
 }
 
@@ -11047,8 +10945,8 @@ rule("CORE: (BOSS) General - SIZE")
 
 	actions
 	{
-		Start Scaling Player(Event Player, 1, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Player(Event Player);
+		Stop Scaling Barriers(Event Player);
 	}
 }
 
@@ -12629,7 +12527,7 @@ rule("CORE: (TEAM) D.VA - SIZE")
 	actions
 	{
 		Start Scaling Player(Event Player, 0.900, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Barriers(Event Player);
 	}
 }
 
@@ -12645,7 +12543,7 @@ rule("CORE: (TEAM) DOOM - SIZE")
 	actions
 	{
 		Start Scaling Player(Event Player, 0.888, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Barriers(Event Player);
 	}
 }
 
@@ -13078,7 +12976,7 @@ rule("CORE: (TEAM) HAZARD - HEALTH & SIZE")
 	actions
 	{
 		Start Scaling Player(Event Player, 0.800, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Barriers(Event Player);
 		Remove Health Pool From Player(Event Player.health_pool);
 		Remove Health Pool From Player(Event Player.shield_pool);
 		Remove Health Pool From Player(Event Player.armour_pool);
@@ -13133,7 +13031,7 @@ rule("CORE: (TEAM) TORB: HEALTH")
 		Add Health Pool To Player(Event Player, Armor, 100, True, False);
 		Event Player.armour_pool = Last Created Health Pool;
 		Start Scaling Player(Event Player, 1.125, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Barriers(Event Player);
 		Wait(0.016, Ignore Condition);
 		Event Player.base_health = Max Health(Event Player);
 		Event Player.base_shields = Max Health Of Type(Event Player, Shields);
@@ -14349,7 +14247,7 @@ rule("CORE: (TEAM) WINSTON: HEALTH / SIZE")
 
 	actions
 	{
-		Start Scaling Player(Event Player, 1, False);
+		Stop Scaling Player(Event Player);
 		Start Scaling Barriers(Event Player, 0.750, False);
 		Remove Health Pool From Player(Event Player.armour_pool);
 		Remove Health Pool From Player(Event Player.health_pool);
@@ -14889,9 +14787,7 @@ rule("CORE: (TEAM) SIG - LEVITATION OFF")
 	conditions
 	{
 		Event Player.Ability_Bool == True;
-		(!Is Button Held(Event Player, Button(Jump)) || Is Dead(Event Player) || Has Status(Event Player, Hacked) || Has Status(
-			Event Player, Asleep) || Has Status(Event Player, Knocked Down) || Has Status(Event Player, Frozen) || Has Status(Event Player,
-			Rooted) || Has Status(Event Player, Stunned) || Is Using Ultimate(Event Player) || Is On Ground(Event Player)) == True;
+		(!Is Button Held(Event Player, Button(Jump)) || Event Player.Stunned || Has Status(Event Player, Rooted) || Is Using Ultimate(Event Player) || Is On Ground(Event Player)) == True;
 	}
 
 	actions
@@ -17757,7 +17653,7 @@ rule("CORE: (TEAM) RAM - SIZE")
 
 	actions
 	{
-		Start Scaling Player(Event Player, 1, False);
+		Stop Scaling Player(Event Player);
 		Start Scaling Barriers(Event Player, 2, False);
 	}
 }
@@ -17774,7 +17670,7 @@ rule("CORE: (TEAM) ORISA - SIZE")
 	actions
 	{
 		Start Scaling Player(Event Player, 0.920, False);
-		Start Scaling Barriers(Event Player, 1, False);
+		Stop Scaling Barriers(Event Player);
 	}
 }
 
