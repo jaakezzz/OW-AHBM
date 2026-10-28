@@ -14805,12 +14805,13 @@ rule("MAPS: ANTI-ENVIRO actions")
 		Call Subroutine(anti_enviro_OOM);
 		Skip(1);
 		Teleport(Event Player, Nearest Walkable Position(Event Player));
-		Start Throttle In Direction(Event Player, Vector(0, 0, 0), 0, To Player, Replace existing throttle, Direction and Magnitude);
+		Set Status(Event Player, Null, Rooted, 2.048);
+		Cancel Primary Action(Event Player);
 		Wait(0.001, Restart When True);
-		Set Status(Event Player, Null, Knocked Down, 9999);
+		Set Status(Event Player, Null, Knocked Down, 2.032);
 		Skip If(Team Of(Event Player) == Team 2, 2);
 		Wait(0.001, Restart When True);
-		Set Status(Event Player, Null, Phased Out, 9999);
+		Set Status(Event Player, Null, Phased Out, 2.916);
 		Wait(0.001, Restart When True);
 		Play Effect(All Players(All Teams), Debuff Impact Sound, Color(White), Event Player, 100);
 		Play Effect(All Players(All Teams), Good Pickup Effect, Color(White), Event Player, 2);
@@ -14818,21 +14819,9 @@ rule("MAPS: ANTI-ENVIRO actions")
 		Skip If(Team Of(Event Player) == Team 2, 2);
 		Create Effect(All Players(All Teams), Ring, Color(White), Event Player, 0.500, Visible To Position and Radius);
 		Event Player.ringout_FX = Last Created Entity;
-		Skip If(Has Status(Event Player, Knocked Down), 8);
 		Wait(2, Restart When True);
 		Big Message(Event Player, Custom String("{0} OUT OF BOUNDS {0}", Icon String(No)));
-		Stop Throttle In Direction(Event Player);
-		Clear Status(Event Player, Phased Out);
-		Destroy Effect(Event Player.ringout_FX);
-		Wait Until(!Is Using Ability 1(Event Player), 4.040);
-		Set Status(Event Player, Null, Knocked Down, 4.444);
-		Skip(5);
-		Wait(2, Restart When True);
-		Big Message(Event Player, Custom String("{0} OUT OF BOUNDS {0}", Icon String(No)));
-		Clear Status(Event Player, Knocked Down);
-		Stop Throttle In Direction(Event Player);
 		Wait(0.900, Restart When True);
-		Clear Status(Event Player, Phased Out);
 		Destroy Effect(Event Player.ringout_FX);
 		Loop If Condition Is True;
 	}
